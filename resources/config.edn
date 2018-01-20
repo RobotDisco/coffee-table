@@ -1,0 +1,7 @@
+{:database #profile {:dev {:join "jbdc:postgresql://"
+                           "localhost:5432"
+                           "/coffeetable"
+                           "?user=coffeetable"
+                           "&password=coffeetable"}}
+ :webserver #profile {:dev {:host "localhost"
+                            :port 3000}}}
