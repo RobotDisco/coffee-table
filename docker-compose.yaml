@@ -7,5 +7,3 @@ services:
     environment:
       - POSTGRES_USER=coffeetable
       - POSTGRES_PASSWORD=coffeetable
-      
-    
