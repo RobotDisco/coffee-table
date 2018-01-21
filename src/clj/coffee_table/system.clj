@@ -1,17 +1,10 @@
 (ns coffee-table.system
   "Components and their dependency relationships"
-  (:require [aero.core :as aero]
-            [clojure.java.io :as io]
+  (:require [coffee-table.config :refer [config]]
             [com.stuartsierra.component :refer [system-map system-using]]
             [taoensso.timbre :as timbre]))
 
 (timbre/refer-timbre)
-
-(defn config
-  "Read EDN config, with the given profile. See Aero docs at
-  https://github.com/juxt/aero for details."
-  [profile]
-  (aero/read-config (io/resource "config.edn") {:profile profile}))
 
 (defrecord DoNothing []
   com.stuartsierra.component/Lifecycle
