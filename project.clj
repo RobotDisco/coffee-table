@@ -15,6 +15,8 @@
                  ;; Logging
                  [com.taoensso/timbre "4.10.0"]]
 
+  :env {:squiggly {checkers [:eastwood :kibit]}}
+
   :min-lein-version "2.0.0"
   
   :source-paths ["src/clj"]
@@ -23,7 +25,8 @@
 
   :main ^:skip-aot coffee-table.core
   
-  :plugins [[com.roomkey/lein-v "6.2.0"]]
+  :plugins [[com.roomkey/lein-v "6.2.0"]
+            [lein-environ "1.1.0"]]
   
   :profiles {:uberjar {:omit-source true
                        :aot :all
