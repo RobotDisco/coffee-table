@@ -13,7 +13,7 @@
                  [com.stuartsierra/component "0.3.2"]
                  
                  ;; Logging
-                 [org.clojure/tools.logging "0.4.0"]]
+                 [com.taoensso/timbre "4.10.0"]]
 
   :min-lein-version "2.0.0"
   

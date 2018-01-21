@@ -3,23 +3,26 @@
   (:gen-class)
   (:require [com.stuartsierra.component :as component]
             [coffee-table.system :refer [new-system]]
-            [clojure.tools.logging :as log]))
+            [taoensso.timbre :as timbre]))
 
-(def system nil)
+(timbre/refer-timbre)
 
-(defn shut-down-app [system]
-  (log/info ::shutting-down-app)
+(defn add-shutdown-hook! [^Runnable f]
+  (.addShutdownHook (Runtime/getRuntime) (Thread. f)))
+
+(defn logged-shutdown [system]
+  (info ::shutting-down-app)
   (component/stop system)
-  (log/info ::shut-down-app))
+  (info ::shut-down-app))
 
 (defn -main
   [& args]
   (let [system (new-system :prod)]
     ;; Shut down system if we terminate
-    (.addShutdownHook (Runtime/getRuntime) (Thread. (partial shut-down-app system)))
-    (log/info ::starting-app)
+    (add-shutdown-hook! (partial logged-shutdown system))
+    (info ::starting-app)
     (component/start system)
-    (log/info ::started-app))
+    (info ::started-app))
   ;; All threads are daemon, so block forever:
   @(promise))
 

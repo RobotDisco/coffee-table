@@ -1,10 +1,11 @@
 (ns coffee-table.system
   "Components and their dependency relationships"
-  (:require
-   [aero.core :as aero]
-   [clojure.java.io :as io]
-   [clojure.tools.logging :as log]
-   [com.stuartsierra.component :refer [system-map system-using]]))
+  (:require [aero.core :as aero]
+            [clojure.java.io :as io]
+            [com.stuartsierra.component :refer [system-map system-using]]
+            [taoensso.timbre :as timbre]))
+
+(timbre/refer-timbre)
 
 (defn config
   "Read EDN config, with the given profile. See Aero docs at
@@ -15,9 +16,9 @@
 (defrecord DoNothing []
   com.stuartsierra.component/Lifecycle
   (start [component]
-    (log/info component "started"))
+    (info component "started"))
   (stop [component]
-    (log/info component "stopped")))
+    (info component "stopped")))
 
 (defn new-do-nothing []
   (map->DoNothing {}))
