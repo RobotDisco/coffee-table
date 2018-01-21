@@ -1,4 +1,4 @@
-(defproject coffee-table "0.0.1"
+(defproject coffee-table "0.0.1-SNAPSHOT"
   :description "A site for Gaelan's café reviews"
   :url "http://github.com/RobotDisco/coffee-table"
   :license {:name "Eclipse Public License - v 1.0"
