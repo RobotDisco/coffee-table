@@ -29,8 +29,8 @@
                        :aot :all
                        :uberjar-name "coffee_table.jar"}}
   
-  :prep-tasks [["v" "cache" "src"]]
-  :release-tasks [["vcs" "assert-committed"]
+  #_ :prep-tasks #_ [["v" "cache" "src/clj"]]
+  #_ :release-tasks #_ [["vcs" "assert-committed"]
                   ["v" "update"] ;; compute new version and tag it
                   ["vcs" push]
                   ["deploy"]])
