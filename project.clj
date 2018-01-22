@@ -35,7 +35,8 @@
   :profiles {:uberjar {:omit-source true
                        :aot :all
                        :uberjar-name "coffee_table.jar"}
-             :dev {:dependencies [[reloaded.repl "0.2.4"]]}}
+             :dev {:dependencies [[reloaded.repl "0.2.4"]]
+                   :source-paths ["dev"]}}
   
   #_ :prep-tasks #_ [["v" "cache" "src/clj"]]
   #_ :release-tasks #_ [["vcs" "assert-committed"]
