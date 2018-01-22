@@ -43,4 +43,13 @@
   #_ :release-tasks #_ [["vcs" "assert-committed"]
                   ["v" "update"] ;; compute new version and tag it
                   ["vcs" push]
-                  ["deploy"]])
+                        ["deploy"]]
+  :release-tasks [["vcs" "assert-committed"]
+                  ["change" "version"
+                   "leiningen.release/bump-version" "release"]
+                  ["vcs" "commit"]
+                  ["vcs" "tag" "--no-sign"]
+                  ["deploy"]
+                  ["change" "version" "leiningen.release/bump-version"]
+                  ["vcs" "commit"]
+                  ["vcs" "push"]])
