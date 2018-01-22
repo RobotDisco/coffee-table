@@ -1,7 +1,11 @@
-{:database #profile {:dev {:join "jbdc:postgresql://"
-                           "localhost:5432"
-                           "/coffeetable"
-                           "?user=coffeetable"
-                           "&password=coffeetable"}}
- :webserver #profile {:dev {:host "localhost"
-                            :port 3000}}}
+{:database {:url #join ["jdbc:postgresql://"
+                        "localhost:5432"
+                        "/coffeetable"
+                        "?user=coffeetable"
+                        "&password=coffeetable"]}
+ :migratus {:store :database
+            :migration-dir "migrations"
+            :migration-table-name "migratus_migrations"
+            :db ^:ref [:database :url]}
+ :webserver {:host "localhost"
+             :port 3000}}

@@ -8,3 +8,8 @@
   [profile]
   (aero/read-config (io/resource "config.edn") {:profile profile}))
 
+(defn migratus
+  "Return the migratus subset of the given config"
+  [config]
+  (get config :migratus))
+

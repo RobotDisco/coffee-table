@@ -11,12 +11,16 @@
                  
                  ;; Component management
                  [com.stuartsierra/component "0.3.2"]
+
+                 ;; Databases; SQL, migrations
+                 [migratus "1.0.3"]
+                 [org.postgresql/postgresql "42.2.0"]
                  
                  ;; Logging
                  [com.taoensso/timbre "4.10.0"]]
 
   :env {:squiggly {checkers [:eastwood :kibit]}}
-
+  
   :min-lein-version "2.0.0"
   
   :source-paths ["src/clj"]
