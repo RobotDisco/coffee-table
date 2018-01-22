@@ -24,6 +24,7 @@
   :min-lein-version "2.0.0"
   
   :source-paths ["src/clj"]
+  :repl-options {:init-ns user}
   :resource-paths ["resources"]
   :target-path "target/%s/"
 
