@@ -17,7 +17,7 @@
 
                  ;; Databases; SQL, migrations
                  [migratus "1.0.3"]
-                 [org.postgresql/postgresql "42.2.0"]
+                 [org.postgresql/postgresql "42.2.1"]
                  
                  ;; Logging
                  [com.taoensso/timbre "4.10.0"]]
