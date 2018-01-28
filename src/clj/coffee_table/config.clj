@@ -13,3 +13,8 @@
   [config]
   (get config :migratus))
 
+(defn database-spec
+  "Return the spec dictionary, or URL, of the app's database"
+  [config]
+  (get-in config [:database :spec]))
+
