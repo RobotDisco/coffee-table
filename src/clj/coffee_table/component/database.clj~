@@ -1,9 +1,0 @@
-(ns coffee-table.component.database
-  (:require [com.stuartsierra.component :as component]))
-
-(s/defrecord Database [config]
-  component/Lifecycle
-  (start [this]
-    (assoc this :spec (get-in config [:database :url])))
-  (stop [this]
-    (dissoc this :spec)))
