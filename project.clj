@@ -6,7 +6,10 @@
             :distribution :repo
             :comments "same as Clojure"}
   
-  :dependencies [;; Configuration management
+  :dependencies [;; Core language runtime
+                 [org.clojure/clojure "1.9.0"] 
+                 
+                 ;; Configuration management
                  [aero "1.1.2"]
                  
                  ;; Component management
