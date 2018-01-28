@@ -20,13 +20,17 @@
                  [org.postgresql/postgresql "42.2.1"]
                  
                  ;; Logging
-                 [com.taoensso/timbre "4.10.0"]]
+                 [com.taoensso/timbre "4.10.0"]
+
+                 ;; Schema (data model) validation, coercion
+                 [prismatic/schema "1.1.7"]]
 
   :env {:squiggly {checkers [:eastwood :kibit]}}
   
   :min-lein-version "2.0.0"
   
   :source-paths ["src/clj"]
+  :test-paths ["test/clj"]
   :repl-options {:init-ns user}
   :resource-paths ["resources"]
   :target-path "target/%s/"
