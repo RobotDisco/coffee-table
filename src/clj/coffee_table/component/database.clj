@@ -2,16 +2,11 @@
   (:require [com.stuartsierra.component :as component]
             [clojure.java.jdbc :as jdbc]))
 
-(defrecord Database [db-spec]
+(defrecord Database []
   component/Lifecycle
-  (start [this]
-    (let [conn (jdbc/get-connection (:db-spec this))]
-      (assoc this :connection conn)))
-  (stop [this]
-    (when-let [conn (:connection this)]
-      (.close conn))
-    (dissoc this :connection)))
+  (start [this])
+  (stop [this]))
 
 (defn new-database
- [db-spec]
- (map->Database {:db-spec db-spec}))
+ []
+ (map->Database {}))
