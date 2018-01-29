@@ -11,11 +11,17 @@
 (defn new-system-map
   "Create the system. See https://github.com/stuartsierra/component"
   [config]
-  (system-map
-   :database (new-database (config/database-spec config))))
+  (system-map))
+
+(defn new-dependency-map
+  "Declare the dependency relationship between components. See https://github.com/stuartsierra/component"
+  []
+  {})
 
 (defn new-system
   "Construct a new system, configured with the given profile"
   [profile]
   (let [config (config profile)]
-    (new-system-map config)))
+    (system-using
+     (new-system-map config)
+     (new-dependency-map))))
