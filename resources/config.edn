@@ -1,6 +1,7 @@
 {:database {:spec #join ["postgresql://"
                          "localhost:5432"
-                         "/coffeetable"
+                         #profile {:default "/coffeetable"
+                                   :test "/test_coffeetable"}
                          "?user=coffeetable"
                          "&password=coffeetable"
                          "&sslmode=disable"]}
