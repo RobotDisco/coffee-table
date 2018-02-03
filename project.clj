@@ -7,7 +7,7 @@
             :comments "same as Clojure"}
   
   :dependencies [;; Core language runtime
-                 [org.clojure/clojure "1.9.0"] 
+                 [org.clojure/clojure "1.8.0"] 
                  
                  ;; Configuration management
                  [aero "1.1.2"]
