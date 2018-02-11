@@ -1,10 +1,10 @@
-{:database {:spec #join ["postgresql://"
-                         "localhost:5432"
-                         #profile {:default "/coffeetable"
-                                   :test "/test_coffeetable"}
-                         "?user=coffeetable"
-                         "&password=coffeetable"
-                         "&sslmode=disable"]}
+{:database {:spec {:dbtype "postgresql"
+                   :host "localhost"
+                   :port 5432
+                   :dbname "coffeetable"
+                   :user "coffeetable"
+                   :password "coffeetable"
+                   :ssl false}}
  :migratus {:store :database
             :migration-dir "migrations"
             :migration-table-name "migratus_migrations"
