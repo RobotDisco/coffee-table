@@ -16,6 +16,7 @@
                  [com.stuartsierra/component "0.3.2"]
 
                  ;; Databases; SQL, migrations
+                 [com.layerware/hugsql "0.4.8"]
                  [migratus "1.0.3"]
                  [org.postgresql/postgresql "42.2.1"]
                  
