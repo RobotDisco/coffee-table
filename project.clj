@@ -7,7 +7,7 @@
             :comments "same as Clojure"}
   
   :dependencies [;; Core language runtime
-                 [org.clojure/clojure "1.9.0"] 
+                 [org.clojure/clojure "1.8.0"] 
                  
                  ;; Configuration management
                  [aero "1.1.2"]
@@ -16,6 +16,7 @@
                  [com.stuartsierra/component "0.3.2"]
 
                  ;; Databases; SQL, migrations
+                 [com.layerware/hugsql "0.4.8"]
                  [migratus "1.0.3"]
                  [org.postgresql/postgresql "42.2.1"]
                  
@@ -29,7 +30,7 @@
   
   :min-lein-version "2.0.0"
   
-  :source-paths ["src/clj"]
+  :source-paths #{"src/clj" "src/cljc"}
   :test-paths ["test/clj"]
   :repl-options {:init-ns user}
   :resource-paths ["resources"]
