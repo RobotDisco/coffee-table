@@ -1,1 +1,1 @@
-drop table if exists visits;
+DROP TABLE IF EXISTS visits;
