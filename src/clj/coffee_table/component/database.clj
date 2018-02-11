@@ -40,6 +40,16 @@
   [m]
   (map->Database m))
 
+(s/defn migrate
+  "Roll the database forward to the latest migration."
+  [component :- Database]
+  (migrations/migrate (:migratus component)))
+
+(s/defn rollback
+  "Roll back the latest migration from the DB"
+  [component :- Database]
+  (migrations/rollback (:migratus component)))
+
 (s/defn insert-visit! :- s/Int
   "Insert a visit record into the DB. return the newly created record's ID"
   [component :- Database
