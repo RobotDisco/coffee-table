@@ -28,7 +28,7 @@
                       :beverage_ordered "Espresso"
                       :beverage_rating 3}
         visit-id (sut/insert-visit! db visit-params)]
-    (is (= {:id (:id visit-params)
+    (is (= {:id visit-id
             :cafe_name (:cafe_name visit-params)
             :visit_date (:visit_date visit-params)
             :beverage_ordered (:beverage_ordered visit-params)
@@ -42,4 +42,4 @@
             :ambience_rating nil
             :ambience_notes nil
             :other_notes nil}
-           (sut/get-visit db {:id 1})))))
+           (sut/get-visit db visit-id)))))

@@ -54,13 +54,13 @@
   "Insert a visit record into the DB. return the newly created record's ID"
   [component :- Database
    visit :- m/Visit]
-  (let [{:keys [id]} (dbv/insert-visit! (:spec component) visit)]
+  (let [{:keys [id]} (first (dbv/insert-visit! (:spec component) visit))]
     id))
 
 (s/defn get-visit :- m/Visit
   "Fetch a visit from the DB with the provided ID"
   [component :- Database
    id :- s/Int]
-  (dbv/get-visit (:spec component) id))
+  (dbv/get-visit (:spec component) {:id id}))
 
 
