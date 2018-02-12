@@ -20,14 +20,14 @@
    :cafe_name s/Str
    :visit_date s/Inst
    #_ (s/optional-key :address) #_ Address
-   (s/optional-key :machine) s/Str
-   (s/optional-key :grinder) s/Str
-   (s/optional-key :roast) s/Str
+   (s/optional-key :machine) (s/maybe s/Str)
+   (s/optional-key :grinder) (s/maybe s/Str)
+   (s/optional-key :roast) (s/maybe s/Str)
    :beverage_ordered s/Str
    :beverage_rating Rating
-   (s/optional-key :beverage_notes) s/Str
-   (s/optional-key :service_rating) Rating
-   (s/optional-key :service_notes) s/Str
-   (s/optional-key :ambience_rating) Rating
-   (s/optional-key :ambience_notes) s/Str
-   (s/optional-key :other_notes) s/Str})
+   (s/optional-key :beverage_notes) (s/maybe s/Str)
+   (s/optional-key :service_rating) (s/maybe Rating)
+   (s/optional-key :service_notes) (s/maybe s/Str)
+   (s/optional-key :ambience_rating) (s/maybe Rating)
+   (s/optional-key :ambience_notes) (s/maybe s/Str)
+   (s/optional-key :other_notes) (s/maybe s/Str)})
