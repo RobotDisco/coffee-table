@@ -11,19 +11,6 @@
 
 (timbre/refer-timbre)
 
-(defn to-date [sql-date]
-  (-> sql-date (.getTime) (java.util.Date.)))
-
-(extend-protocol jdbc/IResultSetReadColumn
-  java.sql.Date
-  (result-set-read-column [value metadata index]
-    (to-date value)))
-
-(extend-type java.util.Date
-  jdbc/ISQLParameter
-  (set-parameter [value ^PreparedStatement stmt idx]
-    (.setTimestamp stmt idx (java.sql.Timestamp. (.getTime value)))))
-
 (s/defrecord Database [spec migratus connection]
   component/Lifecycle
   (start [this]

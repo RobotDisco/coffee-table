@@ -1,12 +1,12 @@
 (ns coffee-table.component.database-test
-  (:require [clojure.java.jdbc :as sql]
-   [clojure.test :as t :refer [deftest is]]
-             [coffee-table.component.database :as sut]
-             [coffee-table.config :as ctcfg]
-             [coffee-table.test.system :as cts]
-             [com.stuartsierra.component :as component]
-             [schema.core :as s]
-             [schema.test]))
+  (:require [java-time]
+            [clojure.test :as t :refer [deftest is]]
+            [coffee-table.component.database :as sut]
+            [coffee-table.config :as ctcfg]
+            [coffee-table.test.system :as cts]
+            [com.stuartsierra.component :as component]
+            [schema.core :as s]
+            [schema.test]))
 
 (def config (ctcfg/config :test))
 
@@ -24,7 +24,7 @@
 (deftest test-create-visit
   (let [db (:db cts/*system*)
         visit-params {:cafe_name "Test Café"
-                      :visit_date (java.util.Date.)
+                      :visit_date (java-time/sql-date)
                       :beverage_ordered "Espresso"
                       :beverage_rating 3}
         visit-id (sut/insert-visit! db visit-params)]

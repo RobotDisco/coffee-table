@@ -11,6 +11,9 @@
                  
                  ;; Configuration management
                  [aero "1.1.2"]
+
+                 ;; Time/Date libraries
+                 [clojure.java-time "0.3.1"]
                  
                  ;; Component management
                  [com.stuartsierra/component "0.3.2"]
