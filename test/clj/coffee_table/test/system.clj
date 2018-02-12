@@ -23,11 +23,8 @@
   (let [dbc (:db *system*)
         spec (:spec dbc)
         conn (:connection dbc)]
-    (sql/with-db-transaction [t-conn spec]
-      (sql/db-set-rollback-only! t-conn)
-      (try 
-        (assoc dbc :connection t-conn)
-        (f)
-        (finally
-          (assoc dbc :connection conn))))))
+    (sql/with-db-transaction [spec spec]
+      (sql/db-set-rollback-only! spec)
+      (binding [*system* (assoc-in *system* [:db :spec] spec)]
+        (f)))))
 
