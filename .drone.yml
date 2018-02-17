@@ -1,0 +1,11 @@
+pipeline:
+  build:
+    image: lein-alpine
+    commands:
+      - lein test
+  services:
+    postgres:
+      image: postgres:10
+      environment:
+        - POSTGRES_USER=coffeetable
+        - POSTGRES_PASSWORD=coffeetable
