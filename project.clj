@@ -11,6 +11,7 @@
                  
                  ;; Configuration management
                  [aero "1.1.2"]
+                 [environ "1.1.0"]
 
                  ;; Time/Date libraries
                  [clojure.java-time "0.3.1"]
@@ -48,7 +49,9 @@
                        :aot :all
                        :uberjar-name "coffee_table.jar"}
              :dev {:dependencies [[reloaded.repl "0.2.4"]]
-                   :source-paths ["dev"]}}
+                   :env {:clj-profile "dev"}
+                   :source-paths ["dev"]}
+             :test {:env {:clj-profile "test"}}}
   
   #_ :prep-tasks #_ [["v" "cache" "src/clj"]]
   #_ :release-tasks #_ [["vcs" "assert-committed"]

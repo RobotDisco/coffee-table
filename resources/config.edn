@@ -1,5 +1,6 @@
 {:database {:spec {:dbtype "postgresql"
-                   :host "localhost"
+                   :host #profile {:default "postgres"
+                                   :dev "localhost"}
                    :port 5432
                    :dbname "coffeetable"
                    :user "coffeetable"

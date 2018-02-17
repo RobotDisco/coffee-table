@@ -5,10 +5,11 @@
             [coffee-table.config :as ctcfg]
             [coffee-table.test.system :as cts]
             [com.stuartsierra.component :as component]
+            [environ.core :refer [env]]
             [schema.core :as s]
             [schema.test]))
 
-(def config (ctcfg/config :test))
+(def config (ctcfg/config (keyword (env :clj-profile))))
 
 (defn test-system
   "Create minimal system to test Visit logic functionality"
