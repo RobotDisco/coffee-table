@@ -1,5 +1,6 @@
 (ns coffee-table.test.system
-  (:require [com.stuartsierra.component :as component]
+  (:require [coffee-table.component.database :as dbc]
+            [com.stuartsierra.component :as component]
             [clojure.java.jdbc :as sql]))
 
 (def ^:dynamic *system* nil)
@@ -20,9 +21,9 @@
 
 (defn with-transaction-fixture
   [f]
-  (let [dbc (:db *system*)
-        spec (:spec dbc)
-        conn (:connection dbc)]
+  (let [db (:db *system*)
+        spec (:spec db)]
+    (dbc/migrate db)
     (sql/with-db-transaction [spec spec]
       (sql/db-set-rollback-only! spec)
       (binding [*system* (assoc-in *system* [:db :spec] spec)]
