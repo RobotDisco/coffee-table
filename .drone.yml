@@ -1,11 +1,11 @@
 pipeline:
-  build:
-    image: lein-alpine
+  test:
+    image: clojure:lein-alpine
     commands:
       - lein test
-  services:
-    postgres:
-      image: postgres:10
-      environment:
-        - POSTGRES_USER=coffeetable
-        - POSTGRES_PASSWORD=coffeetable
+services:
+  postgres:
+    image: postgres:10-alpine
+    environment:
+      - POSTGRES_USER=coffeetable
+      - POSTGRES_PASSWORD=coffeetable
