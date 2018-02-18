@@ -3,6 +3,7 @@
             [clojure.test :as t :refer [deftest is]]
             [coffee-table.component.database :as sut]
             [coffee-table.config :as ctcfg]
+            [coffee-table.model :as m]
             [coffee-table.test.system :as cts]
             [com.stuartsierra.component :as component]
             [environ.core :refer [env]]
@@ -55,3 +56,12 @@
         rows-removed (sut/delete-visit-by-id! db visit-id)]
     (is (= rows-removed 1))
     (is (nil? (sut/get-visit db visit-id)))))
+
+(deftest test-update-visit
+  (let [db (:db cts/*system*)
+        visit-params (m/make-visit "Test Cafe" (java-time/sql-date) "Espresso" 5)
+        visit-id (sut/insert-visit! db visit-params)
+        old-visit (assoc visit-params :id visit-id)
+        new-visit (assoc old-visit :ambience_rating 3)
+        rows-updated (sut/update-visit! db new-visit)]
+    (is (= new-visit (sut/get-visit db visit-id)))))

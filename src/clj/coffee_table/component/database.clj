@@ -51,9 +51,13 @@
   (dbv/get-visit (:spec component) {:id id}))
 
 (s/defn delete-visit-by-id! :- s/Int
-  "Delete a visit from the DB with the provided ID"
+  "Delete a visit from the DB with the provided ID. Return rows deleted"
   [component :- Database
    id :- s/Int]
   (dbv/delete-visit-by-id! (:spec component) {:id id}))
 
-
+(s/defn update-visit! :- s/Int
+  "Update a visit from the DB. Return rows updated"
+  [component :- Database
+   visit :- m/Visit]
+  (dbv/update-visit-by-id! (:spec component) visit))

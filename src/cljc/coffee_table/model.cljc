@@ -31,3 +31,23 @@
    (s/optional-key :ambience_rating) (s/maybe Rating)
    (s/optional-key :ambience_notes) (s/maybe s/Str)
    (s/optional-key :other_notes) (s/maybe s/Str)})
+
+(s/defn make-visit :- Visit
+  "Create a visit object with default values"
+  [cafe-name :- s/Str
+   date-visited :- s/Inst
+   beverage-ordered :- s/Str
+   beverage-rating :- Rating]
+  (merge {:cafe_name cafe-name
+          :visit_date date-visited
+          :beverage_ordered beverage-ordered
+          :beverage_rating beverage-rating}
+         {:machine nil
+          :grinder nil
+          :roast nil
+          :beverage_notes nil
+          :service_rating nil
+          :service_notes nil
+          :ambience_rating nil
+          :ambience_notes nil
+          :other_notes nil}))
