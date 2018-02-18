@@ -42,8 +42,10 @@
 
   :main ^:skip-aot coffee-table.core
   
-  :plugins [[com.roomkey/lein-v "6.2.0"]
-            [lein-environ "1.1.0"]]
+  :plugins [[jonase/eastwood "0.2.5"]
+            [com.roomkey/lein-v "6.2.0"]
+            [lein-environ "1.1.0"]
+            [lein-kibit "0.1.5"]]
   
   :profiles {:uberjar {:omit-source true
                        :aot :all
