@@ -37,3 +37,7 @@ cafe_name
 -- doc retrieve a visit record given the id
 SELECT * FROM visits
 WHERE id = :id
+
+-- :name delete-visit-by-id! :! :n
+-- :doc Delete a café visit with the given ID
+DELETE FROM visits WHERE id = :id

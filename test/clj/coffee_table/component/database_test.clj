@@ -44,3 +44,14 @@
             :ambience_notes nil
             :other_notes nil}
            (sut/get-visit db visit-id)))))
+
+(deftest test-remove-visit
+  (let [db (:db cts/*system*)
+        visit-params {:cafe_name "Test Cafe"
+                      :visit_date (java-time/sql-date)
+                      :beverage_ordered "Espresso"
+                      :beverage_rating 5}
+        visit-id (sut/insert-visit! db visit-params)
+        rows-removed (sut/delete-visit-by-id! db visit-id)]
+    (is (= rows-removed 1))
+    (is (nil? (sut/get-visit db visit-id)))))

@@ -44,10 +44,16 @@
   (let [{:keys [id]} (first (dbv/insert-visit! (:spec component) visit))]
     id))
 
-(s/defn get-visit :- m/Visit
+(s/defn get-visit :- (s/maybe m/Visit)
   "Fetch a visit from the DB with the provided ID"
   [component :- Database
    id :- s/Int]
   (dbv/get-visit (:spec component) {:id id}))
+
+(s/defn delete-visit-by-id! :- s/Int
+  "Delete a visit from the DB with the provided ID"
+  [component :- Database
+   id :- s/Int]
+  (dbv/delete-visit-by-id! (:spec component) {:id id}))
 
 
