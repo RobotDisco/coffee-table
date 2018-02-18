@@ -25,36 +25,16 @@
 
 (deftest test-create-visit
   (let [db (:db cts/*system*)
-        visit-params {:cafe_name "Test Café"
-                      :visit_date (java-time/sql-date)
-                      :beverage_ordered "Espresso"
-                      :beverage_rating 3}
+        visit-params (m/make-visit "Test Cafe" (java-time/sql-date) "Espresso" 5)
         visit-id (sut/insert-visit! db visit-params)]
-    (is (= {:id visit-id
-            :cafe_name (:cafe_name visit-params)
-            :visit_date (:visit_date visit-params)
-            :beverage_ordered (:beverage_ordered visit-params)
-            :beverage_rating (:beverage_rating visit-params)
-            :machine nil
-            :grinder nil
-            :roast nil
-            :beverage_notes nil
-            :service_rating nil
-            :service_notes nil
-            :ambience_rating nil
-            :ambience_notes nil
-            :other_notes nil}
+    (is (= (assoc visit-params :id visit-id)
            (sut/get-visit db visit-id)))))
 
 (deftest test-remove-visit
   (let [db (:db cts/*system*)
-        visit-params {:cafe_name "Test Cafe"
-                      :visit_date (java-time/sql-date)
-                      :beverage_ordered "Espresso"
-                      :beverage_rating 5}
+        visit-params (m/make-visit "Test Cafe" (java-time/sql-date) "Espresso" 5)
         visit-id (sut/insert-visit! db visit-params)
         rows-removed (sut/delete-visit-by-id! db visit-id)]
-    (is (= rows-removed 1))
     (is (nil? (sut/get-visit db visit-id)))))
 
 (deftest test-update-visit
