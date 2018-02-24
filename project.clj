@@ -23,6 +23,9 @@
                  [com.layerware/hugsql "0.4.8"]
                  [migratus "1.0.3"]
                  [org.postgresql/postgresql "42.2.1"]
+
+                 ;; HTTP resources, routing, serving
+                 [yada "1.2.11"]
                  
                  ;; Logging
                  [com.taoensso/timbre "4.10.0"]

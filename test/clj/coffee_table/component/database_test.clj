@@ -13,7 +13,7 @@
 (def config (ctcfg/config (keyword (env :clj-profile))))
 
 (defn test-system
-  "Create minimal system to test Visit logic functionality"
+  "Create minimal system to test DB logic functionality"
   []
   (component/system-using
    (component/system-map
