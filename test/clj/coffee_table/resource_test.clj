@@ -38,3 +38,11 @@
       (is (contains? (:headers response) "location"))
       (is (not (nil? (re-matches #"/visits/(\d+)"
                                  (get-in response [:headers "location"]))))))))
+
+(deftest create-visits-invalid-data
+  (testing "POST /visits (invalid data)"
+    (let [db (:db cts/*system*)
+          handler (yada/handler (sut/new-visit-index-resource db))
+          request (mock/json-body (mock/request :post "/") {})
+          response @(handler request)]
+      (is (= 400 (-> response :status))))))
