@@ -8,7 +8,11 @@
             [coffee-table.test.system :as cts]
             [coffee-table.config :as ctcfg]
             [com.stuartsierra.component :as component]
-            [coffee-table.component.database :as dbc]))
+            [coffee-table.component.database :as dbc]
+            [coffee-table.model :as m]
+            [java-time]
+            [ring.mock.request :as mock]
+            [cheshire.core :refer [generate-string]]))
 
 (def config (ctcfg/config (keyword (env :clj-profile))))
 
@@ -26,4 +30,11 @@
 (deftest create-visits-valid-data
   (testing "POST /visits (valid data)"
     (let [db (:db cts/*system*)
-          handler (yada/handler coffee-table.resource/new-visit-index-resource db)])))
+          handler (yada/handler (sut/new-visit-index-resource db))
+          data (m/make-visit "Test Café" (java-time/local-date) "Espresso" 3)
+          request (mock/json-body (mock/request :post "/") data)
+          response @(handler request)]
+      (is (= 201 (:status response)))
+      (is (contains? (:headers response) "location"))
+      (is (not (nil? (re-matches #"/visits/(\d+)"
+                                 (get-in response [:headers "location"]))))))))

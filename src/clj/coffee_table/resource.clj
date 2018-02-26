@@ -1,24 +1,29 @@
 (ns coffee-table.resource
-  (:require [yada.yada :as yada]))
+  (:require [yada.yada :as yada]
+            [coffee-table.model :as m]
+            [coffee-table.component.database :as dbc]
+            [taoensso.timbre :as timbre])
+  (:import [java.net URI]))
+
+(timbre/refer-timbre)
 
 (defn new-visit-index-resource [db]
-  #_ (yada/resource
-   {:access-control {:allow-origin "http://localhost:3449"
-                     :allow-methods [:options :head :get :post]
-                     :allow-headers ["Content-Type" "Authorization"]
-                     :scheme :jwt
-                     :authorization {:methods {:get :user
-                                               :post :user}}}
-    :logger stupid-logger
+  (yada/resource
+   {#_ :access-control #_ {#_ :allow-origin #_ "http://localhost:3449"
+                           :allow-methods [:options :head :get :post]
+                           :allow-headers ["Content-Type" "Authorization"]
+                           #_ :scheme #_ :jwt
+                           #_ :authorization #_ {:methods {:get :user
+                                                     :post :user}}}
+    :logger #(info %)
     :description "Café Visit index"
     :consumes #{"application/json"}
     :produces #{"application/json"}
-    :methods {:get {:response (fn [ctx]
-                                (dbc/visits db))}
-              :post {:parameters {:body Visit}
+    :methods {#_ :get #_ {:response (fn [ctx]
+                                      (dbc/visits db))}
+              :post {:parameters {:body m/Visit}
                      :response (fn [ctx]
-                                 (let [visit (dbc/add-visit db (get-in ctx [:parameters :body]))
-                                       id (:id visit)]
+                                 (let [id (dbc/insert-visit! db (get-in ctx [:parameters :body]))]
                                    (URI. (str "/visits/" id))))}}}))
 
 (defn new-visit-node-resource [db]

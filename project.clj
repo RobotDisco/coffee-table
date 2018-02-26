@@ -30,6 +30,9 @@
                  ;; Logging
                  [com.taoensso/timbre "4.10.0"]
 
+                 ;; Mocks
+                 [ring/ring-mock "0.3.2"]
+
                  ;; Schema (data model) validation, coercion
                  [prismatic/schema "1.1.7"]]
 
