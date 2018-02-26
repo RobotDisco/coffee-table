@@ -1,5 +1,6 @@
 (ns coffee-table.model
-  (:require [schema.core :as s]))
+  (:require [schema.core :as s])
+  (:import [java.time LocalDate]))
 
 (s/defschema Rating
   "Numeric score for various visit factors"
@@ -18,7 +19,7 @@
   "Schema for coffee table visits"
   {(s/optional-key :id) s/Int
    :cafe_name s/Str
-   :visit_date s/Inst
+   :visit_date LocalDate
    #_ (s/optional-key :address) #_ Address
    (s/optional-key :machine) (s/maybe s/Str)
    (s/optional-key :grinder) (s/maybe s/Str)
@@ -35,7 +36,7 @@
 (s/defn make-visit :- Visit
   "Create a visit object with default values"
   [cafe-name :- s/Str
-   date-visited :- s/Inst
+   date-visited :- LocalDate
    beverage-ordered :- s/Str
    beverage-rating :- Rating]
   (merge {:cafe_name cafe-name

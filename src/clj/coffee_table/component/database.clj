@@ -6,8 +6,8 @@
             [hugsql.core :as hugsql]
             [migratus.core :as migrations]
             [taoensso.timbre :as timbre]
-            [schema.core :as s])
-  (:import [java.sql PreparedStatement]))
+            [schema.core :as s]
+            [java-time]))
 
 (timbre/refer-timbre)
 
@@ -48,7 +48,9 @@
   "Fetch a visit from the DB with the provided ID"
   [component :- Database
    id :- s/Int]
-  (dbv/get-visit (:spec component) {:id id}))
+  (let [sql-visit (dbv/get-visit (:spec component) {:id id})]
+    (when-not (nil? sql-visit)
+      (update sql-visit :visit_date java-time/local-date))))
 
 (s/defn delete-visit-by-id! :- s/Int
   "Delete a visit from the DB with the provided ID. Return rows deleted"
