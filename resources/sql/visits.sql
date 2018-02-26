@@ -38,6 +38,10 @@ cafe_name
 SELECT * FROM visits
 WHERE id = :id
 
+-- :name list-visit-summaries :? :*
+-- doc get a list of summaries of all visits
+SELECT id, cafe_name, visit_date, beverage_rating FROM visits
+
 -- :name delete-visit-by-id! :! :n
 -- :doc Delete a café visit with the given ID
 DELETE FROM visits WHERE id = :id

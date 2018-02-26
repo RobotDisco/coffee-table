@@ -5,17 +5,17 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"
             :distribution :repo
             :comments "same as Clojure"}
-  
+
   :dependencies [;; Core language runtime
-                 [org.clojure/clojure "1.8.0"] 
-                 
+                 [org.clojure/clojure "1.8.0"]
+
                  ;; Configuration management
                  [aero "1.1.2"]
                  [environ "1.1.0"]
 
                  ;; Time/Date libraries
                  [clojure.java-time "0.3.1"]
-                 
+
                  ;; Component management
                  [com.stuartsierra/component "0.3.2"]
 
@@ -26,20 +26,21 @@
 
                  ;; HTTP resources, routing, serving
                  [yada "1.2.11"]
-                 
+
                  ;; Logging
                  [com.taoensso/timbre "4.10.0"]
 
                  ;; Mocks
                  [ring/ring-mock "0.3.2"]
+                 [byte-streams "0.2.3"] ; This is how mock requests return bodies
 
-                 ;; Schema (data model) validation, coercion
+                 ;; schema (data model) validation, coercion
                  [prismatic/schema "1.1.7"]]
 
   :env {:squiggly {checkers [:eastwood :kibit]}}
-  
+
   :min-lein-version "2.0.0"
-  
+
   :source-paths #{"src/clj" "src/cljc"}
   :test-paths ["test/clj"]
   :repl-options {:init-ns user}
@@ -47,12 +48,12 @@
   :target-path "target/%s/"
 
   :main ^:skip-aot coffee-table.core
-  
+
   :plugins [[jonase/eastwood "0.2.5"]
             [com.roomkey/lein-v "6.2.0"]
             [lein-environ "1.1.0"]
             [lein-kibit "0.1.5"]]
-  
+
   :profiles {:uberjar {:omit-source true
                        :aot :all
                        :uberjar-name "coffee_table.jar"}
@@ -60,7 +61,7 @@
                    :env {:clj-profile "dev"}
                    :source-paths ["dev"]}
              :test {:env {:clj-profile "test"}}}
-  
+
   #_ :prep-tasks #_ [["v" "cache" "src/clj"]]
   #_ :release-tasks #_ [["vcs" "assert-committed"]
                   ["v" "update"] ;; compute new version and tag it

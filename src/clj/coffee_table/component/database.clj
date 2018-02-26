@@ -44,6 +44,12 @@
   (let [{:keys [id]} (first (dbv/insert-visit! (:spec component) visit))]
     id))
 
+(s/defn list-visit-summaries :- [m/Summary]
+  "Get a summary of all visits currently recorded"
+  [component :- Database]
+  (mapv #(update % :visit_date java-time/local-date)
+        (dbv/list-visit-summaries (:spec component))))
+
 (s/defn get-visit :- (s/maybe m/Visit)
   "Fetch a visit from the DB with the provided ID"
   [component :- Database

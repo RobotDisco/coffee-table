@@ -52,3 +52,10 @@
           :ambience_rating nil
           :ambience_notes nil
           :other_notes nil}))
+
+(s/defschema Summary
+  "Schema for coffee table summaries"
+  {:id s/Int
+   :cafe_name s/Str
+   :visit_date LocalDate
+   :beverage_rating s/Int})

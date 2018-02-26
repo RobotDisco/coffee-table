@@ -2,12 +2,13 @@
   (:require [yada.yada :as yada]
             [coffee-table.model :as m]
             [coffee-table.component.database :as dbc]
-            [taoensso.timbre :as timbre])
+            [taoensso.timbre :as timbre]
+            [schema.core :as s])
   (:import [java.net URI]))
 
 (timbre/refer-timbre)
 
-(defn new-visit-index-resource [db]
+(s/defn new-visit-index-resource [db] :- yada.schema/Resource
   (yada/resource
    {#_ :access-control #_ {#_ :allow-origin #_ "http://localhost:3449"
                            :allow-methods [:options :head :get :post]
@@ -19,8 +20,8 @@
     :description "Café Visit index"
     :consumes #{"application/json"}
     :produces #{"application/json"}
-    :methods {#_ :get #_ {:response (fn [ctx]
-                                      (dbc/visits db))}
+    :methods {:get {:response (fn [ctx]
+                                (dbc/list-visit-summaries db))}
               :post {:parameters {:body m/Visit}
                      :response (fn [ctx]
                                  (let [id (dbc/insert-visit! db (get-in ctx [:parameters :body]))]
