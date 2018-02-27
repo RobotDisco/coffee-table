@@ -29,6 +29,7 @@
 
                  ;; Logging
                  [com.taoensso/timbre "4.10.0"]
+                 [com.fzakaria/slf4j-timbre "0.3.8"]
 
                  ;; Mocks
                  [ring/ring-mock "0.3.2"]
