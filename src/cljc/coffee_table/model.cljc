@@ -53,6 +53,11 @@
           :ambience_notes nil
           :other_notes nil}))
 
+(s/defn visit-uri :- s/Str
+  "Really stupid function for generating URIs for visits"
+  [id :- s/Int]
+  (str "/visits/" id))
+
 (s/defschema Summary
   "Schema for coffee table summaries"
   {:id s/Int

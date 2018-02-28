@@ -68,8 +68,11 @@
           handler (yada/handler (sut/new-visit-index-resource db))
           numtimes 2
           _ (dotimes [_ numtimes]
-              @(handler (mock/json-body (mock/request :post "/visits") example-visit)))
+              @(handler (mock/json-body (mock/request :post "/") example-visit)))
           list-request (mock/request :get "/")
-          list-response @(handler list-request)]
+          list-response @(handler list-request)
+          list-body (parse-string (bs/to-string (:body list-response)) keyword)]
       (is (= 200 (:status list-response)))
-      (is (= numtimes (count (parse-string (bs/to-string (:body list-response)))))))))
+      (is (= numtimes (count list-body)))
+      (doseq [visit list-body]
+        (is (not (nil? (re-matches #"/visits/(\d+)" (:uri visit)))))))))

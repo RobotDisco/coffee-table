@@ -18,17 +18,20 @@
                            :allow-headers ["Content-Type" "Authorization"]
                            #_ :scheme #_ :jwt
                            #_ :authorization #_ {:methods {:get :user
-                                                     :post :user}}}
+                                                           :post :user}}}
+    :id :resources/visit
+    :summary "Café Visit index"
     :logger #(info %)
     :description "Café Visit index"
     :consumes #{"application/json"}
     :produces #{"application/json"}
     :methods {:get {:response (fn [ctx]
-                                (dbc/list-visit-summaries db))}
+                                (mapv #(assoc % :uri (m/visit-uri (:id %)))
+                                      (dbc/list-visit-summaries db)))}
               :post {:parameters {:body m/Visit}
                      :response (fn [ctx]
                                  (let [id (dbc/insert-visit! db (get-in ctx [:parameters :body]))]
-                                   (URI. (str "/visits/" id))))}}}))
+                                   (URI. (m/visit-uri id))))}}}))
 
 (s/defn new-visit-node-resource :- yada.schema/Resource
   "Resource for visit items (get, update, delete)"
