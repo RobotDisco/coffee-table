@@ -1,5 +1,6 @@
 (ns coffee-table.resource-test
-  (:require [coffee-table.resource :as sut]
+  (:require [bidi.vhosts :refer [make-handler vhosts-model]]
+            [coffee-table.component.visits :as sut]
             [clojure.test :as t :refer [deftest testing is]]
             [environ.core :refer [env]]
             [schema.core :as s]
@@ -23,8 +24,9 @@
   (component/system-using
    (component/system-map
     :db (dbc/new-database {:spec (ctcfg/database-spec config)
-                           :migratus (ctcfg/migratus config)}))
-   {}))
+                           :migratus (ctcfg/migratus config)})
+    :visits (sut/new-visits))
+   {:visits {:db :db}}))
 
 (t/use-fixtures :once schema.test/validate-schemas)
 (t/use-fixtures :each (cts/with-system-fixture test-system) cts/with-transaction-fixture)
@@ -76,3 +78,30 @@
       (is (= numtimes (count list-body)))
       (doseq [visit list-body]
         (is (not (nil? (re-matches #"/visits/(\d+)" (:uri visit)))))))))
+
+(deftest get-visit-id-does-not-exist
+  (testing "GET /visits/<someid> (nonexistant entity)"
+    (let [db (:db cts/*system*)
+          visits (:visits cts/*system*)
+          handler (make-handler (vhosts-model [:* (sut/visit-routes visits)]))
+          request (mock/request :get "/visits/9999")
+          response @(handler request)]
+      (is (= 404 (:status response))))))
+
+#_ (deftest get-visits-id-exists
+  (testing "GET /visits/<someid> (existing entry)"
+    (let [db (:db cts/*system*)
+          visits (:visits cts/*system*)
+          create-handler (yada/handler (sut/new-visit-index-resource db))
+          data example-visit
+          create-request (mock/json-body (mock/request :post "/") data)
+          create-response @(create-handler create-request)
+          get-handler (make-handler (vhosts-model [:* (sut/visit-routes visits)]))
+          get-request (mock/request :get (get-in create-response [:headers "location"]))
+          get-response (-> get-request
+                           get-handler
+                           deref
+                           :body
+                           bs/to-string)]
+      (is (= example-visit get-response))
+      (is (= nil (get-in create-response [:headers "location"]))))))

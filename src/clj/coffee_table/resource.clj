@@ -36,35 +36,35 @@
 (s/defn new-visit-node-resource :- yada.schema/Resource
   "Resource for visit items (get, update, delete)"
   [db :- Database]
-  (yada/resource {})
-  #_ (yada/resource
-   {:access-control {:allow-origin "http://localhost:3449"
-                     :allow-methods [:options :head :get :put :delete]
-                     :allow-headers ["Content-Type" "Authorization"]
-                     :scheme :jwt
-                     :authorization {:methods {:get :user
-                                               :put :user
-                                               :delete :user}}}
-    :logger stupid-logger
+
+  (yada/resource
+   {#_ :access-control #_ {:allow-origin "http://localhost:3449"
+                            :allow-methods [:options :head :get :put :delete]
+                            :allow-headers ["Content-Type" "Authorization"]
+                            :scheme :jwt
+                            :authorization {:methods {:get :user
+                                                      :put :user
+                                                      :delete :user}}}
+    :logger #(info %)
     :description "Café Visit entries"
     :consumes #{"application/json"}
     :produces #{"application/json"}
     :parameters {:path {:id Long}}
     :properties (fn [ctx]
                   (let [id (get-in ctx [:parameters :path :id])]
-                    {:exists? (not (nil? (dbc/visit db id)))}))
-    :methods {:delete {:response (fn [ctx]
+                    {:exists? (not (nil? (dbc/get-visit db id)))}))
+    :methods {#_ :delete #_ {:response (fn [ctx]
                                    (let [id (get-in ctx [:parameters :path :id])]
                                      (dbc/delete-visit db id)))}
               :get {:response (fn [ctx]
                                 (let [id (get-in ctx [:parameters :path :id])]
-                                  (dbc/visit db id)))}
-              :put {:parameters {:body Visit}
-                    :response (fn [ctx]
-                                (let [id (get-in ctx [:parameters :path :id])
-                                      updated-visit (get-in ctx [:parameters :body])
-                                      updated-visit1 (assoc updated-visit :id id)
-                                      res (dbc/update-visit db updated-visit1)]
-                                  (if-not (nil? res)
-                                    nil
-                                    (assoc-in ctx [:response :status] 404))))}}}))
+                                  (dbc/get-visit db id)))}
+              #_ :put #_ {:parameters {:body Visit}
+                          :response (fn [ctx]
+                                      (let [id (get-in ctx [:parameters :path :id])
+                                            updated-visit (get-in ctx [:parameters :body])
+                                            updated-visit1 (assoc updated-visit :id id)
+                                            res (dbc/update-visit db updated-visit1)]
+                                        (if-not (nil? res)
+                                          nil
+                                          (assoc-in ctx [:response :status] 404))))}}}))

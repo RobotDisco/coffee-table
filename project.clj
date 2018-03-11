@@ -25,6 +25,7 @@
                  [org.postgresql/postgresql "42.2.1"]
 
                  ;; HTTP resources, routing, serving
+                 [bidi "2.1.3"]
                  [yada "1.2.11"]
 
                  ;; Logging
