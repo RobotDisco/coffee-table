@@ -1,5 +1,7 @@
 (ns coffee-table.model
-  (:require [schema.core :as s])
+  (:require [java-time.local]
+            [schema.core :as s]
+            [schema.coerce :as coerce])
   (:import [java.time LocalDate]))
 
 (s/defschema Rating
@@ -53,10 +55,19 @@
           :ambience_notes nil
           :other_notes nil}))
 
-(s/defn visit-uri :- s/Str
-  "Really stupid function for generating URIs for visits"
-  [id :- s/Int]
-  (str "/visits/" id))
+(defn localdate-matcher [schema]
+  (let [datetime-regex #"\d{4}-\d{2}-\d{2}"]
+    (when (= LocalDate schema)
+      (coerce/safe
+       (fn [x]
+         (if (and (string? x) (re-matches datetime-regex x))
+           (java-time.local/local-date x)
+           x))))))
+
+(def visit-matcher (coerce/first-matcher [localdate-matcher coerce/json-coercion-matcher]))
+
+(defn json->visit [json]
+  ((coerce/coercer Visit visit-matcher) json))
 
 (s/defschema Summary
   "Schema for coffee table summaries"
@@ -64,3 +75,6 @@
    :cafe_name s/Str
    :visit_date LocalDate
    :beverage_rating s/Int})
+
+(defn json->summary [json]
+  ((coerce/coercer Summary visit-matcher) json))

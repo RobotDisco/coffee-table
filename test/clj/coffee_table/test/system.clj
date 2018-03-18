@@ -20,12 +20,13 @@
       (f))))
 
 (defn with-transaction-fixture
-  [f]
-  (let [db (:db *system*)
-        spec (:spec db)]
-    (dbc/migrate db)
-    (sql/with-db-transaction [spec spec]
-      (sql/db-set-rollback-only! spec)
-      (binding [*system* (assoc-in *system* [:db :spec] spec)]
-        (f)))))
-
+  [componentvec]
+  (fn
+    [f]
+    (let [db (:db *system*)
+          spec (:spec db)]
+      (dbc/migrate db)
+      (sql/with-db-transaction [spec spec]
+        (sql/db-set-rollback-only! spec)
+        (binding [*system* (assoc-in *system* componentvec spec)]
+          (f))))))

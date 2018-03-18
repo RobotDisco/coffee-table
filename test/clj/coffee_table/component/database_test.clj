@@ -21,7 +21,10 @@
                            :migratus (ctcfg/migratus config)}))
    {}))
 
-(t/use-fixtures :once schema.test/validate-schemas (cts/with-system-fixture test-system) cts/with-transaction-fixture)
+(t/use-fixtures :once
+  schema.test/validate-schemas
+  (cts/with-system-fixture test-system)
+  (cts/with-transaction-fixture [:db :spec]))
 
 (deftest test-create-visit
   (let [db (:db cts/*system*)
