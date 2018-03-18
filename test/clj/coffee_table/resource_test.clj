@@ -142,3 +142,27 @@
           put-request (mock/json-body (mock/request :put location) put-body)
           put-response @(handler put-request)]
       (is (= 400 (:status put-response))))))
+
+(deftest delete-visits-id-exists
+    (testing "DELETE /visits/<someid> (existing entry)"
+      (let [visits (:visits cts/*system*)
+            visit-routes (vhosts-model [:* (sut/visit-routes visits)])
+            handler (make-handler visit-routes)
+            create-request (mock/json-body (mock/request :post "/visits") example-visit)
+            create-response @(handler create-request)
+            location (get-in create-response [:headers "location"])
+            delete-request (mock/request :delete location)
+            delete-response @(handler delete-request)
+            get-request (mock/request :get location)
+            get-response @(handler get-request)]
+        (is (= 204 (:status delete-response)))
+        (is (= 404 (:status get-response))))))
+
+(deftest delete-visits-id-does-not-exist
+  (testing "DELETE /visits/<id> (<id> doesn't exist)"
+    (let [visits (:visits cts/*system*)
+          visit-routes (vhosts-model [:* (sut/visit-routes visits)])
+          handler (make-handler visit-routes)
+          delete-request (mock/request :delete "/visits/0")
+          delete-response @(handler delete-request)]
+      (is (= 204 (:status delete-response))))))

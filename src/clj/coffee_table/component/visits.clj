@@ -68,9 +68,10 @@
     :properties (fn [ctx]
                   (let [id (get-in ctx [:parameters :path :id])]
                     {:exists? (not (nil? (dbc/get-visit db id)))}))
-    :methods {#_ :delete #_ {:response (fn [ctx]
-                                         (let [id (get-in ctx [:parameters :path :id])]
-                                           (dbc/delete-visit db id)))}
+    :methods {:delete {:response (fn [ctx]
+                                   (let [id (get-in ctx [:parameters :path :id])
+                                         _ (dbc/delete-visit-by-id! db id)]
+                                     nil))}
               :get {:response (fn [ctx]
                                 (let [id (get-in ctx [:parameters :path :id])
                                       uri (yada/path-for ctx :visits/entry {:route-params {:id id}})]
