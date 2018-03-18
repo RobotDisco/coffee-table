@@ -90,9 +90,9 @@
   "Define the API route for visit entities"
   [component :- Visits]
   (let [db (:db component)
-        routes ["/visits"
+        routes [""
                 [;; Visit actions w/o requiring visit id
                  ["" (new-visit-index-resource db)]
                  ;; Visit actions requiring visit id
                  [["/" :id] (new-visit-node-resource db)]]]]
-    ["" [routes]]))
+    routes))

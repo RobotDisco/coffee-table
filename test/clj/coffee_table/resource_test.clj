@@ -32,7 +32,7 @@
 
 (defn include-handler [f]
   (let [visits (:visits cts/*system*)
-        handler (make-handler (vhosts-model [:* (sut/visit-routes visits)]))]
+        handler (make-handler (vhosts-model [:* ["/visits" [(sut/visit-routes visits)]]]))]
     (binding [*handler* handler]
       (f))))
 
@@ -124,12 +124,11 @@
   (testing "PUT /visits/<id> (wrong field name)"
     (let [visits (:visits cts/*system*)
           visit-routes (vhosts-model [:* (sut/visit-routes visits)])
-          handler (make-handler visit-routes)
           create-request (mock/json-body (mock/request :post "/visits") example-visit)
-          location (get-in @(handler create-request) [:headers "location"])
+          location (get-in @(*handler* create-request) [:headers "location"])
           put-body (dissoc example-visit :cafe_name)
           put-request (mock/json-body (mock/request :put location) put-body)
-          put-response @(handler put-request)]
+          put-response @(*handler* put-request)]
       (is (= 400 (:status put-response))))))
 
 (deftest delete-visits-id-exists
