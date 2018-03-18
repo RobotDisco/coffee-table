@@ -16,6 +16,8 @@
             [cheshire.core :refer [parse-string]]
             [byte-streams :as bs :refer [convert]]))
 
+(def ^:dynamic *handler*)
+
 (def config (ctcfg/config (keyword (env :clj-profile))))
 
 (defn test-system
@@ -28,10 +30,17 @@
     :visits (sut/new-visits))
    {:visits {:db :db}}))
 
+(defn include-handler [f]
+  (let [visits (:visits cts/*system*)
+        handler (make-handler (vhosts-model [:* (sut/visit-routes visits)]))]
+    (binding [*handler* handler]
+      (f))))
+
 (t/use-fixtures :once schema.test/validate-schemas)
 (t/use-fixtures :each
   (cts/with-system-fixture test-system)
-  (cts/with-transaction-fixture [:visits :db :spec]))
+  (cts/with-transaction-fixture [:visits :db :spec])
+  include-handler)
 
 (s/def example-visit :- m/Visit
   "Minimally-defined visit for our testing purposes"
@@ -39,11 +48,9 @@
 
 (deftest create-visits-valid-data
   (testing "POST /visits (valid data)"
-    (let [visits (:visits cts/*system*)
-          handler (make-handler (vhosts-model [:* (sut/visit-routes visits)]))
-          data example-visit
+    (let [data example-visit
           request (mock/json-body (mock/request :post "/visits") data)
-          response @(handler request)]
+          response @(*handler* request)]
       (is (= 201 (:status response)))
       (is (contains? (:headers response) "location"))
       (is (not (nil? (re-matches #"/visits/(\d+)"
@@ -51,30 +58,24 @@
 
 (deftest create-visits-invalid-data
   (testing "POST /visits (invalid data)"
-    (let [visits (:visits cts/*system*)
-          handler (make-handler (vhosts-model [:* (sut/visit-routes visits)]))
-          request (mock/json-body (mock/request :post "/visits") {})
-          response @(handler request)]
+    (let [request (mock/json-body (mock/request :post "/visits") {})
+          response @(*handler* request)]
       (is (= 400 (:status response))))))
 
 (deftest list-visits-no-entries-yet
   (testing "GET /visits (no entries yet)"
-    (let [visits (:visits cts/*system*)
-          handler (make-handler (vhosts-model [:* (sut/visit-routes visits)]))
-          request (mock/json-body (mock/request :get "/visits") {})
-          response @(handler request)]
+    (let [request (mock/json-body (mock/request :get "/visits") {})
+          response @(*handler* request)]
       (is (= 200 (:status response)))
       (is (= {:data []} (parse-string (bs/to-string (:body response)) keyword))))))
 
 (deftest list-visits-entries-exist
   (testing "Get /visits (a couple of entries)"
-    (let [visits (:visits cts/*system*)
-          handler (make-handler (vhosts-model [:* (sut/visit-routes visits)]))
-          numtimes 2
+    (let [numtimes 2
           _ (dotimes [_ numtimes]
-              @(handler (mock/json-body (mock/request :post "/visits") example-visit)))
+              @(*handler* (mock/json-body (mock/request :post "/visits") example-visit)))
           list-request (mock/request :get "/visits")
-          list-response @(handler list-request)
+          list-response @(*handler* list-request)
           list-body (:data (parse-string (bs/to-string (:body list-response)) keyword))]
       (is (= 200 (:status list-response)))
       (is (= numtimes (count list-body)))
@@ -84,24 +85,18 @@
 
 (deftest get-visit-id-does-not-exist
   (testing "GET /visits/<someid> (nonexistant entity)"
-    (let [visits (:visits cts/*system*)
-          handler (make-handler (vhosts-model [:* (sut/visit-routes visits)]))
-          request (mock/request :get "/visits/9999")
-          response @(handler request)]
+    (let [request (mock/request :get "/visits/9999")
+          response @(*handler* request)]
       (is (= 404 (:status response))))))
 
 (deftest get-visits-id-exists
   (testing "GET /visits/<someid> (existing entry)"
-    (let [visits (:visits cts/*system*)
-          visit-routes (vhosts-model [:* (sut/visit-routes visits)])
-          create-handler (make-handler visit-routes)
-          data example-visit
+    (let [data example-visit
           create-request (mock/json-body (mock/request :post "/visits") data)
-          create-response @(create-handler create-request)
-          get-handler (make-handler visit-routes)
+          create-response @(*handler* create-request)
           get-request (mock/request :get (get-in create-response [:headers "location"]))
           get-response (-> get-request
-                           get-handler
+                           *handler*
                            deref
                            :body
                            bs/to-string
@@ -111,24 +106,18 @@
 
 (deftest update-visits-entry-exists
   (testing "PUT /visits/<id> (<id> existed already)"
-    (let [visits (:visits cts/*system*)
-          visit-routes (vhosts-model [:* (sut/visit-routes visits)])
-          handler (make-handler visit-routes)
-          create-request (mock/json-body (mock/request :post "/visits") example-visit)
-          location (get-in @(handler create-request) [:headers "location"])
+    (let [create-request (mock/json-body (mock/request :post "/visits") example-visit)
+          location (get-in @(*handler* create-request) [:headers "location"])
           put-body (assoc example-visit :cafe_name "Updated Café")
           put-request (mock/json-body (mock/request :put location) put-body)
-          put-response @(handler put-request)]
+          put-response @(*handler* put-request)]
       (is (= 204 (:status put-response))))))
 
 (deftest update-visits-entry-does-not-exist
   (testing "PUT /visits/<id> (<id> doesn't exist)"
-    (let [visits (:visits cts/*system*)
-          visit-routes (vhosts-model [:* (sut/visit-routes visits)])
-          put-handler (make-handler visit-routes)
-          put-body (-> example-visit (assoc :id 0) (assoc :cafe_name "Updated Café"))
+    (let [put-body (-> example-visit (assoc :id 0) (assoc :cafe_name "Updated Café"))
           put-request (mock/json-body (mock/request :put "/visits/0") put-body)
-          put-response @(put-handler put-request)]
+          put-response @(*handler* put-request)]
       (is (= 404 (:status put-response))))))
 
 (deftest update-visits-invalid-data
@@ -145,24 +134,18 @@
 
 (deftest delete-visits-id-exists
     (testing "DELETE /visits/<someid> (existing entry)"
-      (let [visits (:visits cts/*system*)
-            visit-routes (vhosts-model [:* (sut/visit-routes visits)])
-            handler (make-handler visit-routes)
-            create-request (mock/json-body (mock/request :post "/visits") example-visit)
-            create-response @(handler create-request)
+      (let [create-request (mock/json-body (mock/request :post "/visits") example-visit)
+            create-response @(*handler* create-request)
             location (get-in create-response [:headers "location"])
             delete-request (mock/request :delete location)
-            delete-response @(handler delete-request)
+            delete-response @(*handler* delete-request)
             get-request (mock/request :get location)
-            get-response @(handler get-request)]
+            get-response @(*handler* get-request)]
         (is (= 204 (:status delete-response)))
         (is (= 404 (:status get-response))))))
 
 (deftest delete-visits-id-does-not-exist
   (testing "DELETE /visits/<id> (<id> doesn't exist)"
-    (let [visits (:visits cts/*system*)
-          visit-routes (vhosts-model [:* (sut/visit-routes visits)])
-          handler (make-handler visit-routes)
-          delete-request (mock/request :delete "/visits/0")
-          delete-response @(handler delete-request)]
+    (let [delete-request (mock/request :delete "/visits/0")
+          delete-response @(*handler* delete-request)]
       (is (= 204 (:status delete-response))))))
