@@ -92,8 +92,7 @@
 
 (deftest get-visits-id-exists
   (testing "GET /visits/<someid> (existing entry)"
-    (let [db (:db cts/*system*)
-          visits (:visits cts/*system*)
+    (let [visits (:visits cts/*system*)
           visit-routes (vhosts-model [:* (sut/visit-routes visits)])
           create-handler (make-handler visit-routes)
           data example-visit
@@ -109,3 +108,37 @@
                            (parse-string keyword))]
       (is (= example-visit (dissoc (m/json->visit (:data get-response)) :id)))
       (is (not (nil? (re-matches #"/visits/(\d+)" (get-in get-response [:links :self]))))))))
+
+(deftest update-visits-entry-exists
+  (testing "PUT /visits/<id> (<id> existed already)"
+    (let [visits (:visits cts/*system*)
+          visit-routes (vhosts-model [:* (sut/visit-routes visits)])
+          handler (make-handler visit-routes)
+          create-request (mock/json-body (mock/request :post "/visits") example-visit)
+          location (get-in @(handler create-request) [:headers "location"])
+          put-body (assoc example-visit :cafe_name "Updated Café")
+          put-request (mock/json-body (mock/request :put location) put-body)
+          put-response @(handler put-request)]
+      (is (= 204 (:status put-response))))))
+
+(deftest update-visits-entry-does-not-exist
+  (testing "PUT /visits/<id> (<id> doesn't exist)"
+    (let [visits (:visits cts/*system*)
+          visit-routes (vhosts-model [:* (sut/visit-routes visits)])
+          put-handler (make-handler visit-routes)
+          put-body (-> example-visit (assoc :id 0) (assoc :cafe_name "Updated Café"))
+          put-request (mock/json-body (mock/request :put "/visits/0") put-body)
+          put-response @(put-handler put-request)]
+      (is (= 404 (:status put-response))))))
+
+(deftest update-visits-invalid-data
+  (testing "PUT /visits/<id> (wrong field name)"
+    (let [visits (:visits cts/*system*)
+          visit-routes (vhosts-model [:* (sut/visit-routes visits)])
+          handler (make-handler visit-routes)
+          create-request (mock/json-body (mock/request :post "/visits") example-visit)
+          location (get-in @(handler create-request) [:headers "location"])
+          put-body (dissoc example-visit :cafe_name)
+          put-request (mock/json-body (mock/request :put location) put-body)
+          put-response @(handler put-request)]
+      (is (= 400 (:status put-response))))))

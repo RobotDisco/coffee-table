@@ -46,5 +46,5 @@
         visit-id (sut/insert-visit! db visit-params)
         old-visit (assoc visit-params :id visit-id)
         new-visit (assoc old-visit :ambience_rating 3)
-        rows-updated (sut/update-visit! db new-visit)]
+        rows-updated (sut/update-visit! db visit-id new-visit)]
     (is (= new-visit (sut/get-visit db visit-id)))))

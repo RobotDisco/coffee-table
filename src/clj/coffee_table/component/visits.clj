@@ -64,7 +64,7 @@
     :description "Café Visit entries"
     :consumes #{"application/json"}
     :produces #{"application/json"}
-    :parameters {:path {:id Long}}
+    :parameters {:path {:id s/Int}}
     :properties (fn [ctx]
                   (let [id (get-in ctx [:parameters :path :id])]
                     {:exists? (not (nil? (dbc/get-visit db id)))}))
@@ -76,15 +76,14 @@
                                       uri (yada/path-for ctx :visits/entry {:route-params {:id id}})]
                                   {:links {:self uri}
                                    :data (dbc/get-visit db id)}))}
-              #_ :put #_ {:parameters {:body Visit}
-                          :response (fn [ctx]
-                                      (let [id (get-in ctx [:parameters :path :id])
-                                            updated-visit (get-in ctx [:parameters :body])
-                                            updated-visit1 (assoc updated-visit :id id)
-                                            res (dbc/update-visit db updated-visit1)]
-                                        (if-not (nil? res)
-                                          nil
-                                          (assoc-in ctx [:response :status] 404))))}}}))
+              :put {:parameters {:body m/Visit}
+                    :response (fn [ctx]
+                                (let [id (get-in ctx [:parameters :path :id])
+                                      updated-visit (get-in ctx [:parameters :body])
+                                      res (dbc/update-visit! db id updated-visit)]
+                                  (if (> res 0)
+                                    nil
+                                    (assoc-in ctx [:response :status] 404))))}}}))
 
 (s/defn visit-routes :- bidi.schema/RoutePair
   "Define the API route for visit entities"

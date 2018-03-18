@@ -67,5 +67,6 @@
 (s/defn update-visit! :- s/Int
   "Update a visit from the DB. Return rows updated"
   [component :- Database
+   id :- s/Int
    visit :- m/Visit]
-  (dbv/update-visit-by-id! (:spec component) visit))
+  (dbv/update-visit-by-id! (:spec component) (merge visit {:id id})))
