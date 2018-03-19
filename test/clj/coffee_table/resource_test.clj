@@ -32,7 +32,7 @@
 
 (defn include-handler [f]
   (let [visits (:visits cts/*system*)
-        handler (make-handler (vhosts-model [:* ["/visits" [(sut/visit-routes visits)]]]))]
+        handler (make-handler (vhosts-model [:* (sut/visit-routes visits)]))]
     (binding [*handler* handler]
       (f))))
 

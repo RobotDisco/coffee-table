@@ -18,3 +18,10 @@
   [config]
   (get-in config [:database :spec]))
 
+(defn webserver-host
+  [config]
+  (get-in config [:webserver :host]))
+
+(defn webserver-port
+  [config]
+  (get-in config [:webserver :port]))

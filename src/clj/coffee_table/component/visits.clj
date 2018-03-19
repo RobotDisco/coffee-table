@@ -35,7 +35,7 @@
                                                            :post :user}}}
     :id :visits/index
     :summary "Café Visit index"
-    :logger #(info %)
+    #_ :logger #_ #(info %)
     :description "Café Visit index"
     :consumes #{"application/json"}
     :produces #{"application/json"}
@@ -60,7 +60,7 @@
                                                      :put :user
                                                      :delete :user}}}
     :id :visits/entry
-    :logger #(info %)
+    #_ :logger #_ #(info %)
     :description "Café Visit entries"
     :consumes #{"application/json"}
     :produces #{"application/json"}
@@ -90,9 +90,10 @@
   "Define the API route for visit entities"
   [component :- Visits]
   (let [db (:db component)
-        routes [""
+        routes ["/visits"
                 [;; Visit actions w/o requiring visit id
                  ["" (new-visit-index-resource db)]
                  ;; Visit actions requiring visit id
                  [["/" :id] (new-visit-node-resource db)]]]]
-    routes))
+    [""
+     [routes]]))

@@ -10,5 +10,5 @@
             :migration-dir "migrations"
             :migration-table-name "migratus_migrations"
             :db ^:ref [:database :spec]}
- :webserver {:host "localhost"
+ :webserver {:host "localhost:3000"
              :port 3000}}
