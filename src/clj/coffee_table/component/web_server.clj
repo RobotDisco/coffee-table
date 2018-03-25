@@ -4,6 +4,7 @@
             [coffee-table.component.visits :refer [visit-routes]]
             [com.stuartsierra.component :as component]
             [yada.yada :as yada]
+            [yada.swagger :refer [swaggered]]
             [taoensso.timbre :as timbre]))
 
 (timbre/refer-timbre)
@@ -13,8 +14,11 @@
   [visits]
   [""
    [
-    ["/hello" (yada/handler "Hello World")]
-    ["/api" [(visit-routes visits)]]
+    ["/api" (swaggered (visit-routes visits)
+                       {:info {:title "Visits"
+                               :version "1.0"
+                               :description "A visits service"}
+                        :basePath "/api"})]
     [true (yada/handler nil)]]])
 
 (s/defrecord WebServer [host port visits listener]
