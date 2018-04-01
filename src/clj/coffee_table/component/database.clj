@@ -70,3 +70,10 @@
    id :- s/Int
    visit :- m/Visit]
   (dbv/update-visit-by-id! (:spec component) (merge visit {:id id})))
+
+(s/defn exec-sql
+  "Perform an arbitrary HugSQL function"
+  [db :- Database
+   f
+   params]
+  (f (:spec db) params))

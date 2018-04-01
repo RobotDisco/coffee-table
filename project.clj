@@ -36,6 +36,9 @@
                  [ring/ring-mock "0.3.2"]
                  [byte-streams "0.2.3"] ; This is how mock requests return bodies
 
+                 ;; Password management
+                 [buddy/buddy-hashers "1.3.0"]
+
                  ;; schema (data model) validation, coercion
                  [prismatic/schema "1.1.7"]]
 
@@ -66,8 +69,8 @@
 
   #_ :prep-tasks #_ [["v" "cache" "src/clj"]]
   #_ :release-tasks #_ [["vcs" "assert-committed"]
-                  ["v" "update"] ;; compute new version and tag it
-                  ["vcs" push]
+                        ["v" "update"] ;; compute new version and tag it
+                        ["vcs" push]
                         ["deploy"]]
   :release-tasks [["vcs" "assert-committed"]
                   ["change" "version"
