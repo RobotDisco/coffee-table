@@ -1,12 +1,10 @@
 pipeline:
-  lint:
+  test:
     image: clojure:lein-alpine
+
     commands:
       - lein eastwood
       - lein kibit
-  test:
-    image: clojure:lein-alpine
-    commands:
       - lein test
 services:
   postgres:
