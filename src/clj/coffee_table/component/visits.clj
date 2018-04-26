@@ -2,15 +2,18 @@
   (:require [yada.yada :as yada]
             [coffee-table.model :as m]
             [coffee-table.component.database :as dbc]
+            [coffee-table.component.users :refer [verify]]
             [taoensso.timbre :as timbre]
             [schema.core :as s]
             [com.stuartsierra.component :as component])
   (:import [java.net URI]
-           [coffee_table.component.database Database]))
+           [coffee_table.component.database Database]
+           [coffee_table.component.users Users]))
 
 (timbre/refer-timbre)
 
-(s/defrecord Visits [db :- (s/maybe Database)]
+(s/defrecord Visits [db :- (s/maybe Database)
+                     users :- (s/maybe Users)]
   component/Lifecycle
   (start [this]
     (info ::starting)
@@ -25,14 +28,18 @@
 
 (s/defn new-visit-index-resource :- yada.schema/Resource
   "Resource for visit collection (create, list)"
-  [db :- Database]
+  [db :- Database
+   users :- Users]
   (yada/resource
-   {#_ :access-control #_ {#_ :allow-origin #_ "http://localhost:3449"
-                           :allow-methods [:options :head :get :post]
-                           :allow-headers ["Content-Type" "Authorization"]
-                           #_ :scheme #_ :jwt
-                           #_ :authorization #_ {:methods {:get :user
-                                                           :post :user}}}
+   {:access-control {:allow-methods [:options :head :get :post]
+                     :allow-headers ["Content-Type" "Authorization"]
+                     :scheme "Basic"
+                     :verify (fn [[username password]]
+                               (when (verify users username password)
+                                 {:user username
+                                  :roles #{:user}}))
+                     :authorization {:methods {:get :user
+                                               :post :user}}}
     :id :visits/index
     :summary "Café Visit index"
     #_ :logger #_ #(info %)
@@ -50,7 +57,8 @@
 
 (s/defn new-visit-node-resource :- yada.schema/Resource
   "Resource for visit items (get, update, delete)"
-  [db :- Database]
+  [db :- Database
+   users :- Users]
   (yada/resource
    {#_ :access-control #_ {:allow-origin "http://localhost:3449"
                            :allow-methods [:options :head :get :put :delete]
@@ -90,10 +98,11 @@
   "Define the API route for visit entities"
   [component :- Visits]
   (let [db (:db component)
+        users (:users component)
         routes ["/visits"
                 [;; Visit actions w/o requiring visit id
-                 ["" (new-visit-index-resource db)]
+                 ["" (new-visit-index-resource db users)]
                  ;; Visit actions requiring visit id
-                 [["/" :id] (new-visit-node-resource db)]]]]
+                 [["/" :id] (new-visit-node-resource db users)]]]]
     [""
      [routes]]))

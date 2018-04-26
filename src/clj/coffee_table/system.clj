@@ -3,6 +3,7 @@
   (:require [coffee-table.component.database :refer [new-database]]
             [coffee-table.component.visits :refer [new-visits]]
             [coffee-table.component.web-server :refer [new-web-server]]
+            [coffee-table.component.users :refer [new-users]]
             [coffee-table.config :as ctcfg]
             [com.stuartsierra.component :refer [system-map system-using]]
             [taoensso.timbre :as timbre]
@@ -17,13 +18,15 @@
    :db (new-database {:spec (ctcfg/database-spec config)
                       :migratus (ctcfg/migratus config)})
    :visits (new-visits)
+   :users (new-users)
    :web (new-web-server {:host (ctcfg/webserver-host config)
                          :port (ctcfg/webserver-port config)})))
 
 (defn new-dependency-map
   "Declare the dependency relationship between components. See https://github.com/stuartsierra/component"
   []
-  {:visits [:db]
+  {:users [:db]
+   :visits [:db :users]
    :web [:visits]})
 
 (defn new-system

@@ -1,5 +1,6 @@
 (ns coffee-table.component.users
-  (:require [clojure.java.jdbc :as jdbc]
+  (:require [buddy.hashers :as bhash]
+            [clojure.java.jdbc :as jdbc]
             [coffee-table.component.database :as dbc]
             [coffee-table.db.users :as dbu]
             [taoensso.timbre :as timbre]
@@ -51,14 +52,23 @@
       first
       :id))
 
-(s/defn get-private-user :- PrivateUser
+(s/defn get-private-user :- (s/maybe PrivateUser)
   "Get user w/ password. Be very careful with this"
   [users :- Users
    username :- s/Str]
   (dbc/exec-sql (:db users) dbu/private-user-by-username {:username username}))
 
-(s/defn get-public-user :- PublicUser
+(s/defn get-public-user :- (s/maybe PublicUser)
   "Get user w/o password"
   [users :- Users
    username :- s/Str]
   (dbc/exec-sql (:db users) dbu/public-user-by-username {:username username}))
+
+(s/defn verify :- s/Bool
+  "Verify that supplied username/password combo is valid"
+  [component :- Users
+   username :- s/Str
+   password :- s/Str]
+  (let [user (get-private-user component username)]
+    (when user
+      (bhash/check password (:password user)))))
