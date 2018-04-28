@@ -32,6 +32,9 @@
                  [com.taoensso/timbre "4.10.0"]
                  [com.fzakaria/slf4j-timbre "0.3.8"]
 
+                 ;; Base64
+                 [org.clojure/data.codec "0.1.1"]
+
                  ;; Mocks
                  [ring/ring-mock "0.3.2"]
                  [byte-streams "0.2.3"] ; This is how mock requests return bodies

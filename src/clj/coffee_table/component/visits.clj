@@ -60,13 +60,16 @@
   [db :- Database
    users :- Users]
   (yada/resource
-   {#_ :access-control #_ {:allow-origin "http://localhost:3449"
-                           :allow-methods [:options :head :get :put :delete]
-                           :allow-headers ["Content-Type" "Authorization"]
-                           :scheme :jwt
-                           :authorization {:methods {:get :user
-                                                     :put :user
-                                                     :delete :user}}}
+   {:access-control {:allow-methods [:options :head :get :put :delete]
+                     :allow-headers ["Content-Type" "Authorization"]
+                     :scheme "Basic"
+                     :verify (fn [[username password]]
+                               (when (verify users username password)
+                                 {:user username
+                                  :roles #{:user}}))
+                     :authorization {:methods {:get :user
+                                               :put :user
+                                               :delete :user}}}
     :id :visits/entry
     #_ :logger #_ #(info %)
     :description "Café Visit entries"

@@ -31,6 +31,13 @@
   (merge PublicUser
          {:password s/Str}))
 
+(s/defn make-user :- PrivateUser
+  [username :- String
+   password :- String]
+  {:username username
+   :password (bhash/derive password)
+   :is_admin false})
+
 (s/defrecord Users [db :- (s/maybe Database)]
   component/Lifecycle
   (start [this]

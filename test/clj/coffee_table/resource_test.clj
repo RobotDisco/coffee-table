@@ -14,7 +14,9 @@
             [java-time]
             [ring.mock.request :as mock]
             [cheshire.core :refer [parse-string]]
-            [byte-streams :as bs :refer [convert]]))
+            [byte-streams :as bs :refer [convert]]
+            [coffee-table.component.users :as users]
+            [clojure.data.codec.base64 :as base64]))
 
 (def ^:dynamic *handler*)
 
@@ -27,8 +29,9 @@
    (component/system-map
     :db (dbc/new-database {:spec (ctcfg/database-spec config)
                            :migratus (ctcfg/migratus config)})
-    :visits (sut/new-visits))
-   {:visits {:db :db}}))
+    :visits (sut/new-visits)
+    :users (users/new-users))
+   {:visits [:db :users]}))
 
 (defn include-handler [f]
   (let [visits (:visits cts/*system*)
@@ -36,11 +39,26 @@
     (binding [*handler* handler]
       (f))))
 
-(t/use-fixtures :once schema.test/validate-schemas)
+(defn add-regular-user [f]
+  (let [users (:users cts/*system*)]
+    (users/add-user! users (users/make-user "testuser" "password"))))
+
+(t/use-fixtures :once
+  schema.test/validate-schemas
+  cts/with-transaction-fixture [:users :db :spec]
+  add-regular-user)
+
 (t/use-fixtures :each
   (cts/with-system-fixture test-system)
   (cts/with-transaction-fixture [:visits :db :spec])
   include-handler)
+
+(s/defn auth-via-test-user
+  [request]
+  (mock/header request
+               "Authorization"
+               (str "Basic "
+                    (base64/encode (str "testuser" ":" "password")))))
 
 (s/def example-visit :- m/Visit
   "Minimally-defined visit for our testing purposes"
@@ -49,7 +67,7 @@
 (deftest create-visits-valid-data
   (testing "POST /visits (valid data)"
     (let [data example-visit
-          request (mock/json-body (mock/request :post "/visits") data)
+          request (auth-via-test-user (mock/json-body (mock/request :post "/visits") data))
           response @(*handler* request)]
       (is (= 201 (:status response)))
       (is (contains? (:headers response) "location"))
@@ -58,13 +76,13 @@
 
 (deftest create-visits-invalid-data
   (testing "POST /visits (invalid data)"
-    (let [request (mock/json-body (mock/request :post "/visits") {})
+    (let [request (auth-via-test-user (mock/json-body (mock/request :post "/visits") {}))
           response @(*handler* request)]
       (is (= 400 (:status response))))))
 
 (deftest list-visits-no-entries-yet
   (testing "GET /visits (no entries yet)"
-    (let [request (mock/json-body (mock/request :get "/visits") {})
+    (let [request (auth-via-test-user (mock/json-body (mock/request :get "/visits") {}))
           response @(*handler* request)]
       (is (= 200 (:status response)))
       (is (= {:data []} (parse-string (bs/to-string (:body response)) keyword))))))
@@ -73,7 +91,7 @@
   (testing "Get /visits (a couple of entries)"
     (let [numtimes 2
           _ (dotimes [_ numtimes]
-              @(*handler* (mock/json-body (mock/request :post "/visits") example-visit)))
+              @(*handler* (auth-via-test-user (mock/json-body (mock/request :post "/visits") example-visit))))
           list-request (mock/request :get "/visits")
           list-response @(*handler* list-request)
           list-body (:data (parse-string (bs/to-string (:body list-response)) keyword))]
@@ -85,16 +103,16 @@
 
 (deftest get-visit-id-does-not-exist
   (testing "GET /visits/<someid> (nonexistant entity)"
-    (let [request (mock/request :get "/visits/9999")
+    (let [request (auth-via-test-user (mock/request :get "/visits/9999"))
           response @(*handler* request)]
       (is (= 404 (:status response))))))
 
 (deftest get-visits-id-exists
   (testing "GET /visits/<someid> (existing entry)"
     (let [data example-visit
-          create-request (mock/json-body (mock/request :post "/visits") data)
+          create-request (auth-via-test-user (mock/json-body (mock/request :post "/visits") data))
           create-response @(*handler* create-request)
-          get-request (mock/request :get (get-in create-response [:headers "location"]))
+          get-request (auth-via-test-user (mock/request :get (get-in create-response [:headers "location"])))
           get-response (-> get-request
                            *handler*
                            deref
@@ -106,17 +124,17 @@
 
 (deftest update-visits-entry-exists
   (testing "PUT /visits/<id> (<id> existed already)"
-    (let [create-request (mock/json-body (mock/request :post "/visits") example-visit)
+    (let [create-request (auth-via-test-user (mock/json-body (mock/request :post "/visits") example-visit))
           location (get-in @(*handler* create-request) [:headers "location"])
           put-body (assoc example-visit :cafe_name "Updated Café")
-          put-request (mock/json-body (mock/request :put location) put-body)
+          put-request (auth-via-test-user (mock/json-body (mock/request :put location) put-body))
           put-response @(*handler* put-request)]
       (is (= 204 (:status put-response))))))
 
 (deftest update-visits-entry-does-not-exist
   (testing "PUT /visits/<id> (<id> doesn't exist)"
     (let [put-body (-> example-visit (assoc :id 0) (assoc :cafe_name "Updated Café"))
-          put-request (mock/json-body (mock/request :put "/visits/0") put-body)
+          put-request (auth-via-test-user (mock/json-body (mock/request :put "/visits/0") put-body))
           put-response @(*handler* put-request)]
       (is (= 404 (:status put-response))))))
 
@@ -124,7 +142,7 @@
   (testing "PUT /visits/<id> (wrong field name)"
     (let [visits (:visits cts/*system*)
           visit-routes (vhosts-model [:* (sut/visit-routes visits)])
-          create-request (mock/json-body (mock/request :post "/visits") example-visit)
+          create-request (auth-via-test-user (mock/json-body (mock/request :post "/visits") example-visit))
           location (get-in @(*handler* create-request) [:headers "location"])
           put-body (dissoc example-visit :cafe_name)
           put-request (mock/json-body (mock/request :put location) put-body)
@@ -133,18 +151,18 @@
 
 (deftest delete-visits-id-exists
     (testing "DELETE /visits/<someid> (existing entry)"
-      (let [create-request (mock/json-body (mock/request :post "/visits") example-visit)
+      (let [create-request (auth-via-test-user (mock/json-body (mock/request :post "/visits") example-visit))
             create-response @(*handler* create-request)
             location (get-in create-response [:headers "location"])
-            delete-request (mock/request :delete location)
+            delete-request (auth-via-test-user (mock/request :delete location))
             delete-response @(*handler* delete-request)
-            get-request (mock/request :get location)
+            get-request (auth-via-test-user (mock/request :get location))
             get-response @(*handler* get-request)]
         (is (= 204 (:status delete-response)))
         (is (= 404 (:status get-response))))))
 
 (deftest delete-visits-id-does-not-exist
   (testing "DELETE /visits/<id> (<id> doesn't exist)"
-    (let [delete-request (mock/request :delete "/visits/0")
+    (let [delete-request (auth-via-test-user (mock/request :delete "/visits/0"))
           delete-response @(*handler* delete-request)]
       (is (= 204 (:status delete-response))))))
