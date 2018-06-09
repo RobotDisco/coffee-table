@@ -10,23 +10,23 @@
                  [org.clojure/clojure "1.8.0"]
 
                  ;; Configuration management
-                 [aero "1.1.2"]
+                 [aero "1.1.3"]
                  [environ "1.1.0"]
 
                  ;; Time/Date libraries
-                 [clojure.java-time "0.3.1"]
+                 [clojure.java-time "0.3.2"]
 
                  ;; Component management
                  [com.stuartsierra/component "0.3.2"]
 
                  ;; Databases; SQL, migrations
-                 [com.layerware/hugsql "0.4.8"]
-                 [migratus "1.0.3"]
-                 [org.postgresql/postgresql "42.2.1"]
+                 [com.layerware/hugsql "0.4.9"]
+                 [migratus "1.0.6"]
+                 [org.postgresql/postgresql "42.2.2"]
 
                  ;; HTTP resources, routing, serving
                  [bidi "2.1.3"]
-                 [yada "1.2.11"]
+                 [yada "1.2.13"]
 
                  ;; Logging
                  [com.taoensso/timbre "4.10.0"]
@@ -37,13 +37,13 @@
 
                  ;; Mocks
                  [ring/ring-mock "0.3.2"]
-                 [byte-streams "0.2.3"] ; This is how mock requests return bodies
+                 [byte-streams "0.2.4"] ; This is how mock requests return bodies
 
                  ;; Password management
                  [buddy/buddy-hashers "1.3.0"]
 
                  ;; schema (data model) validation, coercion
-                 [prismatic/schema "1.1.7"]]
+                 [prismatic/schema "1.1.9"]]
 
   :env {:squiggly {checkers [:eastwood :kibit]}}
 
