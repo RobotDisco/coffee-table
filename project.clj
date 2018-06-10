@@ -60,7 +60,8 @@
   :plugins [[jonase/eastwood "0.2.5"]
             [com.roomkey/lein-v "6.2.0"]
             [lein-environ "1.1.0"]
-            [lein-kibit "0.1.5"]]
+            [lein-kibit "0.1.5"]
+            [migratus-lein "0.5.7"]]
 
   :profiles {:uberjar {:omit-source true
                        :aot :all
