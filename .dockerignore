@@ -1,0 +1,14 @@
+.git
+**/.DS_Store
+target/*
+.dir-locals.el
+.drone.yml
+.gitignore
+LICENSE
+.lein-deps-sum
+.lein-env
+.lein-repl-history
+.lein-plugins/
+.lein-failures
+.nrepl-port
+README.org

@@ -64,8 +64,7 @@
             [migratus-lein "0.5.7"]]
 
   :profiles {:uberjar {:omit-source true
-                       :aot :all
-                       :uberjar-name "coffee_table.jar"}
+                       :aot :all}
              :dev {:dependencies [[reloaded.repl "0.2.4"]]
                    :env {:clj-profile "dev"}
                    :source-paths ["dev"]}
