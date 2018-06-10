@@ -8,24 +8,19 @@
   "Numeric score for various visit factors"
   (s/enum 0 1 2 3 4 5))
 
-;;; No idea how implement this, will come back to later
-(s/defschema Address
-  "Location information"
-  {:address1 s/Str
-   (s/optional-key :address2) s/Str
-   :city s/Str
-   :region s/Str
-   :country s/Str})
-
 (s/defschema Visit
   "Schema for coffee table visits"
   {(s/optional-key :id) s/Int
    :cafe_name s/Str
    :visit_date LocalDate
-   #_ :address #_ Address
    :machine (s/maybe s/Str)
    :grinder (s/maybe s/Str)
    :roast (s/maybe s/Str)
+   :address1 (s/maybe s/Str)
+   :address2 (s/maybe s/Str)
+   :city (s/maybe s/Str)
+   :region (s/maybe s/Str)
+   :country (s/maybe s/Str)
    :beverage_ordered s/Str
    :beverage_rating Rating
    :beverage_notes (s/maybe s/Str)
@@ -45,7 +40,11 @@
           :visit_date date-visited
           :beverage_ordered beverage-ordered
           :beverage_rating beverage-rating}
-         {#_ :address #_ nil
+         {:address1 nil
+          :address2 nil
+          :city nil
+          :region nil
+          :country nil
           :machine nil
           :grinder nil
           :roast nil

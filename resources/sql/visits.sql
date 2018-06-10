@@ -6,31 +6,41 @@
 INSERT INTO visits (
 cafe_name
 ,visit_date
---~ (when (contains? params :machine) ",machine")
---~ (when (contains? params :grinder) ",grinder")
---~ (when (contains? params :roast) ",roast")
+,machine
+,grinder
+,roast
+,address1
+,address2
+,city
+,region
+,country
 ,beverage_ordered
 ,beverage_rating
---~ (when (contains? params :beverage_notes) ",beverage_notes")
---~ (when (contains? params :service_rating) ",service_rating")
---~ (when (contains? params :service_notes) ",service_notes")
---~ (when (contains? params :ambience_rating) ",ambience_rating")
---~ (when (contains? params :ambience_notes) ",ambience_notes")
---~ (when (contains? params :other_notes) ",other_notes")
+,beverage_notes
+,service_rating
+,service_notes
+,ambience_rating
+,ambience_notes
+,other_notes
 ) VALUES (
 :cafe_name
 ,:visit_date
---~ (when (contains? params :machine) ",:machine")
---~ (when (contains? params :grinder) ",:grinder")
---~ (when (contains? params :roast) ",:roast")
+,:machine
+,:grinder
+,:roast
+,:address1
+,:address2
+,:city
+,:region
+,:country
 ,:beverage_ordered
 ,:beverage_rating
---~ (when (contains? params :beverage_notes) ",:beverage_notes")
---~ (when (contains? params :service_rating) ",:service_rating")
---~ (when (contains? params :service_notes) ",:service_notes")
---~ (when (contains? params :ambience_rating) ",:ambience_rating")
---~ (when (contains? params :ambience_notes) ",:ambience_notes")
---~ (when (contains? params :other_notes) ",:other_notes")
+,:beverage_notes
+,:service_rating
+,:service_notes
+,:ambience_rating
+,:ambience_notes
+,:other_notes
 ) RETURNING id
 
 -- :name get-visit :? :1
@@ -51,15 +61,20 @@ DELETE FROM visits WHERE id = :id
 UPDATE visits SET
 cafe_name = :cafe_name
 ,visit_date = :visit_date
---~ (when (contains? params :machine) ",machine = :machine")
---~ (when (contains? params :grinder) ",grinder = :grinder")
---~ (when (contains? params :roast) ",roast = :roast")
+,machine = :machine
+,grinder = :grinder
+,roast = :roast
+,address1 = :address1
+,address2 = :address2
+,city = :city
+,region = :region
+,country = :country
 ,beverage_ordered = :beverage_ordered
 ,beverage_rating = :beverage_rating
---~ (when (contains? params :beverage_notes) ",beverage_notes = :beverage_notes")
---~ (when (contains? params :service_rating) ",service_rating = :service_rating")
---~ (when (contains? params :service_notes) ",service_notes = :service_notes")
---~ (when (contains? params :ambience_rating) ",ambience_rating = :ambience_rating")
---~ (when (contains? params :ambience_notes) ",ambience_notes = :ambience_notes")
---~ (when (contains? params :other_notes) ",other_notes = :other_notes")
+,beverage_notes = :beverage_notes
+,service_rating = :service_rating
+,service_notes = :service_notes
+,ambience_rating = :ambience_rating
+,ambience_notes = :ambience_notes
+,other_notes = :other_notes
 WHERE id = :id
