@@ -15,7 +15,6 @@
             [ring.mock.request :as mock]
             [cheshire.core :refer [parse-string]]
             [byte-streams :as bs :refer [convert]]
-            [coffee-table.component.users :as users]
             [clojure.data.codec.base64 :as base64]))
 
 (def ^:dynamic *handler*)
@@ -29,9 +28,8 @@
    (component/system-map
     :db (dbc/new-database {:spec (ctcfg/database-spec config)
                            :migratus (ctcfg/migratus config)})
-    :visits (sut/new-visits)
-    :users (users/new-users))
-   {:visits [:db :users]}))
+    :visits (sut/new-visits))
+   {:visits [:db]}))
 
 (defn include-handler [f]
   (let [visits (:visits cts/*system*)
@@ -41,7 +39,7 @@
 
 (defn add-regular-user [f]
   (let [users (:users cts/*system*)]
-    (users/add-user! users (users/make-user "testuser" "password"))))
+    (dbc/add-user! users (m/make-user "testuser" "password"))))
 
 (t/use-fixtures :once
   schema.test/validate-schemas

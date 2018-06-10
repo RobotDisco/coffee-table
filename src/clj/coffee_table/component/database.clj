@@ -1,5 +1,6 @@
 (ns coffee-table.component.database
-  (:require [coffee-table.db.visits :as dbv]
+  (:require [coffee-table.db.users :as dbu]
+            [coffee-table.db.visits :as dbv]
             [coffee-table.model :as m]
             [com.stuartsierra.component :as component]
             [clojure.java.jdbc :as jdbc]
@@ -7,9 +8,20 @@
             [migratus.core :as migrations]
             [taoensso.timbre :as timbre]
             [schema.core :as s]
-            [java-time]))
+            [java-time]
+            [buddy.hashers :as bhash])
+  (:import [org.postgresql.util PGobject]))
 
 (timbre/refer-timbre)
+
+(extend-protocol jdbc/IResultSetReadColumn
+  PGobject
+  (result-set-read-column [pgobj metadata idx]
+    (let [type  (.getType pgobj)
+          value (.getValue pgobj)]
+      (case type
+        "citext" (str value)
+        :else value))))
 
 (s/defrecord Database [spec migratus connection]
   component/Lifecycle
@@ -77,3 +89,32 @@
    f
    params]
   (f (:spec db) params))
+
+(s/defn add-user! :- s/Int
+  "Add a user into the DB"
+  [component :- Database
+   user :- m/PrivateUser]
+  (-> (exec-sql component dbu/insert-user! user)
+      first
+      :id))
+
+(s/defn get-private-user :- (s/maybe m/PrivateUser)
+  "Get user w/ password. Be very careful with this"
+  [component :- Database
+   username :- s/Str]
+  (exec-sql component dbu/private-user-by-username {:username username}))
+
+(s/defn get-public-user :- (s/maybe m/PublicUser)
+  "Get user w/o password"
+  [component :- Database
+   username :- s/Str]
+  (exec-sql component dbu/public-user-by-username {:username username}))
+
+(s/defn verify :- s/Bool
+  "Verify that supplied username/password combo is valid"
+  [component :- Database
+   username :- s/Str
+   password :- s/Str]
+  (let [user (get-private-user component username)]
+    (when user
+      (bhash/check password (:password user)))))

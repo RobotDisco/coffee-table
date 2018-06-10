@@ -1,6 +1,5 @@
 (ns user
   (:require [coffee-table.component.database :as db]
-            [coffee-table.component.users :as uc]
             [coffee-table.system :refer [new-system]]
             [reloaded.repl :refer [system init start stop go reset reset-all]]
             [schema.core :as s]
@@ -20,7 +19,7 @@
   ([username password]
    (new-user! username password false))
   ([username password admin?]
-   (uc/add-user!
+   (db/add-user!
     (:users system)
     {:username username
      :password (bhash/derive password)

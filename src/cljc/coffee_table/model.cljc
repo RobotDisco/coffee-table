@@ -1,7 +1,8 @@
 (ns coffee-table.model
   (:require [java-time.local]
             [schema.core :as s]
-            [schema.coerce :as coerce])
+            [schema.coerce :as coerce]
+            [buddy.hashers :as bhash])
   (:import [java.time LocalDate]))
 
 (s/defschema Rating
@@ -78,3 +79,21 @@
 
 (defn json->summary [json]
   ((coerce/coercer Summary visit-matcher) json))
+
+(s/defschema PublicUser
+  "Coffee Table Users (password removed for security reasons)"
+  {(s/optional-key :id) s/Int
+   :username s/Str
+   :is_admin s/Bool})
+
+(s/defschema PrivateUser
+  "Coffee Table User accounts"
+  (merge PublicUser
+         {:password s/Str}))
+
+(s/defn make-user :- PrivateUser
+  [username :- String
+   password :- String]
+  {:username username
+   :password (bhash/derive password)
+   :is_admin false})

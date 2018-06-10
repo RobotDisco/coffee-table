@@ -8,9 +8,7 @@
             [environ.core :refer [env]]
             [schema.core :as s]
             [schema.test]
-            [coffee-table.model :as m]
-            [coffee-table.component.database :as db]
-            [coffee-table.component.users :as users]))
+            [coffee-table.model :as m]))
 
 (def config (ctcfg/config (keyword (env :clj-profile))))
 
@@ -20,14 +18,13 @@
   (component/system-using
    (component/system-map
     :db (dbc/new-database {:spec (ctcfg/database-spec config)
-                           :migratus (ctcfg/migratus config)})
-    :users (users/new-users))
-   {:users [:db]}))
+                           :migratus (ctcfg/migratus config)}))
+   {}))
 
 (t/use-fixtures :once
   schema.test/validate-schemas
   (cts/with-system-fixture test-system)
-  (cts/with-transaction-fixture [:users :db :spec]))
+  (cts/with-transaction-fixture [:db :spec]))
 
 
 (def example-user {:username "testuser"
@@ -35,11 +32,11 @@
                    :is_admin false})
 
 (deftest add-user
-  (let [users (:users cts/*system*)
-        user-id (users/add-user! users example-user)
+  (let [db (:db cts/*system*)
+        user-id (dbc/add-user! db example-user)
         username (:username example-user)
         test-private-user (merge example-user
                                  {:id user-id})
         test-public-user (dissoc test-private-user :password)]
-    (is (= test-private-user (users/get-private-user users username)))
-    (is (= test-public-user (users/get-public-user users username)))))
+    (is (= test-private-user (dbc/get-private-user db username)))
+    (is (= test-public-user (dbc/get-public-user db username)))))
