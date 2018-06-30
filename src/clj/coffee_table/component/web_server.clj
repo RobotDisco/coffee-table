@@ -1,7 +1,7 @@
 (ns coffee-table.component.web-server
   (:require [bidi.vhosts :refer [vhosts-model]]
             [schema.core :as s]
-            [coffee-table.component.visits :refer [visit-routes]]
+            [coffee-table.resource :refer [visit-routes]]
             [com.stuartsierra.component :as component]
             [yada.yada :as yada]
             [yada.swagger :refer [swaggered]]

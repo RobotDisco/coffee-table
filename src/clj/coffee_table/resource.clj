@@ -1,4 +1,4 @@
-(ns coffee-table.component.visits
+(ns coffee-table.resource
   (:require [yada.yada :as yada]
             [coffee-table.model :as m]
             [coffee-table.component.database :as dbc :refer [verify]]
@@ -9,19 +9,6 @@
            [coffee_table.component.database Database]))
 
 (timbre/refer-timbre)
-
-(s/defrecord Visits [db :- (s/maybe Database)]
-  component/Lifecycle
-  (start [this]
-    (info ::starting)
-    this)
-  (stop [this]
-    (info ::stopping)
-    this))
-
-(s/defn new-visits :- Visits
-  []
-  (map->Visits {}))
 
 (s/defn new-visit-index-resource :- yada.schema/Resource
   "Resource for visit collection (create, list)"
@@ -94,12 +81,11 @@
 
 (s/defn visit-routes :- bidi.schema/RoutePair
   "Define the API route for visit entities"
-  [component :- Visits]
-  (let [db (:db component)
-        routes ["/visits"
+  [component :- Database]
+  (let [routes ["/visits"
                 [;; Visit actions w/o requiring visit id
-                 ["" (new-visit-index-resource db)]
+                 ["" (new-visit-index-resource component)]
                  ;; Visit actions requiring visit id
-                 [["/" :id] (new-visit-node-resource db)]]]]
+                 [["/" :id] (new-visit-node-resource component)]]]]
     [""
      [routes]]))

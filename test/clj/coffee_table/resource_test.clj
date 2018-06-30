@@ -1,6 +1,6 @@
 (ns coffee-table.resource-test
   (:require [bidi.vhosts :refer [make-handler vhosts-model]]
-            [coffee-table.component.visits :as sut]
+            [coffee-table.resource :as sut]
             [clojure.test :as t :refer [deftest testing is]]
             [environ.core :refer [env]]
             [schema.core :as s]
@@ -27,28 +27,27 @@
   (component/system-using
    (component/system-map
     :db (dbc/new-database {:spec (ctcfg/database-spec config)
-                           :migratus (ctcfg/migratus config)})
-    :visits (sut/new-visits))
-   {:visits [:db]}))
+                           :migratus (ctcfg/migratus config)}))
+   {}))
 
 (defn include-handler [f]
-  (let [visits (:visits cts/*system*)
-        handler (make-handler (vhosts-model [:* (sut/visit-routes visits)]))]
+  (let [db (:db cts/*system*)
+        handler (make-handler (vhosts-model [:* (sut/visit-routes db)]))]
     (binding [*handler* handler]
       (f))))
 
 (defn add-regular-user [f]
-  (let [users (:users cts/*system*)]
-    (dbc/add-user! users (m/make-user "testuser" "password"))))
+  (let [db (:db cts/*system*)]
+    (dbc/add-user! db (m/make-user "testuser" "password"))))
 
 (t/use-fixtures :once
   schema.test/validate-schemas
-  cts/with-transaction-fixture [:users :db :spec]
+  cts/with-transaction-fixture [:db :spec]
   add-regular-user)
 
 (t/use-fixtures :each
   (cts/with-system-fixture test-system)
-  (cts/with-transaction-fixture [:visits :db :spec])
+  (cts/with-transaction-fixture [:db :spec])
   include-handler)
 
 (s/defn auth-via-test-user
