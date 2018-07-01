@@ -1,32 +1,22 @@
 (ns coffee-table.system
   "Components and their dependency relationships"
-  (:require [coffee-table.component.database :refer [new-database]]
-            [coffee-table.component.web-server :refer [new-web-server]]
-            [coffee-table.config :as ctcfg]
-            [com.stuartsierra.component :refer [system-map system-using]]
-            [taoensso.timbre :as timbre]
-            [coffee-table.config :as config]))
+  (:require
+   [aero.core :as aero]
+   [clojure.java.io :as io]
+   [integrant.core :as ig]))
 
-(timbre/refer-timbre)
+(defmethod aero/reader 'ig/ref [_ _ value]
+  (ig/ref value))
 
-(defn new-system-map
-  "Create the system. See https://github.com/stuartsierra/component"
-  [config]
-  (system-map
-   :db (new-database {:spec (ctcfg/database-spec config)
-                      :migratus (ctcfg/migratus config)})
-   :web (new-web-server {:host (ctcfg/webserver-host config)
-                         :port (ctcfg/webserver-port config)})))
-
-(defn new-dependency-map
-  "Declare the dependency relationship between components. See https://github.com/stuartsierra/component"
-  []
-  {})
+(defn config
+  "Read EDN config, with the given profile. See Aero docs at
+  https://github.com/juxt/aero for details."
+  [profile]
+  (aero/read-config (io/resource "config.edn") {:profile profile}))
 
 (defn new-system
   "Construct a new system, configured with the given profile"
   [profile]
-  (let [config (ctcfg/config profile)]
-    (system-using
-     (new-system-map config)
-     (new-dependency-map))))
+  (let [res (:ig/system (config profile))]
+    (ig/load-namespaces res)
+    res))

@@ -1,14 +1,20 @@
-{:database {:spec {:dbtype "postgresql"
-                   :host #profile {:default "postgres"
-                                   :dev "localhost"}
-                   :port 5432
-                   :dbname "coffeetable"
-                   :user "coffeetable"
-                   :password "coffeetable"
-                   :ssl false}}
- :migratus {:store :database
-            :migration-dir "migrations"
-            :migration-table-name "migratus_migrations"
-            :db ^:ref [:database :spec]}
- :webserver {:host "localhost:3000"
-             :port 3000}}
+{:coffee-table/listener #profile {:dev {:coffee-table.listener/host "localhost:3000"
+                                        :coffee-table.listener/port 3000}}
+ :coffee-table/database {:coffee-table.database/spec
+                         {:dbtype "postgresql"
+                          :host #profile {:default "postgres"
+                                          :dev "localhost"}
+                          :port 5432
+                          :dbname "coffeetable"
+                          :user "coffeetable"
+                          :password "coffeetable"
+                          :ssl false}}
+ :coffee-table/migration {:store :database
+                          :migration-dir "migrations"
+                          :migration-table-name "migratus_migrations"
+                          :db #ref [:coffee-table/database :coffee-table.database/spec]}
+ :ig/system
+ {:coffee-table/listener #merge [#ref [:coffee-table/listener]
+                                 {:coffee-table/database #ig/ref :coffee-table/database}]
+  :coffee-table/database #merge [#ref [:coffee-table/database]
+                                 {:coffee-table.database/migration #ref [:coffee-table/migration]}]}}

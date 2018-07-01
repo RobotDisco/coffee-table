@@ -7,7 +7,7 @@
             :comments "same as Clojure"}
 
   :dependencies [;; Core language runtime
-                 [org.clojure/clojure "1.8.0"]
+                 [org.clojure/clojure "1.9.0"]
 
                  ;; Configuration management
                  [aero "1.1.3"]
@@ -17,9 +17,9 @@
                  [clojure.java-time "0.3.2"]
 
                  ;; Component management
-                 [com.stuartsierra/component "0.3.2"]
+                 [integrant "0.6.3"]
 
-                 ;; Databases; SQL, migrations
+                 ;; Databases; SQL, migrations, connection pooling
                  [com.layerware/hugsql "0.4.9"]
                  [migratus "1.0.6"]
                  [org.postgresql/postgresql "42.2.2"]
@@ -58,23 +58,17 @@
   :main ^:skip-aot coffee-table.core
 
   :plugins [[jonase/eastwood "0.2.5"]
-            [com.roomkey/lein-v "6.2.0"]
             [lein-environ "1.1.0"]
             [lein-kibit "0.1.5"]
             [migratus-lein "0.5.7"]]
 
   :profiles {:uberjar {:omit-source true
                        :aot :all}
-             :dev {:dependencies [[reloaded.repl "0.2.4"]]
-                   :env {:clj-profile "dev"}
-                   :source-paths ["dev"]}
+             :dev {:env {:clj-profile "dev"}
+                   :source-paths ["dev"]
+                   :dependencies [[integrant/repl "0.3.1"]]}
              :test {:env {:clj-profile "test"}}}
 
-  #_ :prep-tasks #_ [["v" "cache" "src/clj"]]
-  #_ :release-tasks #_ [["vcs" "assert-committed"]
-                        ["v" "update"] ;; compute new version and tag it
-                        ["vcs" push]
-                        ["deploy"]]
   :release-tasks [["vcs" "assert-committed"]
                   ["change" "version"
                    "leiningen.release/bump-version" "release"]

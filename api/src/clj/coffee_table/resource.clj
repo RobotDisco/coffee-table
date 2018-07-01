@@ -1,18 +1,17 @@
 (ns coffee-table.resource
   (:require [yada.yada :as yada]
+            [bidi.bidi :as bidi]
             [coffee-table.model :as m]
-            [coffee-table.component.database :as dbc :refer [verify]]
+            [coffee-table.database :as dbc :refer [verify]]
             [taoensso.timbre :as timbre]
-            [schema.core :as s]
-            [com.stuartsierra.component :as component])
-  (:import [java.net URI]
-           [coffee_table.component.database Database]))
+            [schema.core :as s])
+  (:import [java.net URI]))
 
 (timbre/refer-timbre)
 
-(s/defn new-visit-index-resource :- yada.schema/Resource
+(s/defn new-index-resource :- yada.schema/Resource
   "Resource for visit collection (create, list)"
-  [db :- Database]
+  [db]
   (yada/resource
    {:access-control {:allow-methods [:options :head :get :post]
                      :allow-headers ["Content-Type" "Authorization"]
@@ -38,9 +37,9 @@
                                  (let [id (dbc/insert-visit! db (get-in ctx [:parameters :body]))]
                                    (URI. (yada/path-for ctx :visits/entry {:route-params {:id id}}))))}}}))
 
-(s/defn new-visit-node-resource :- yada.schema/Resource
+(s/defn new-node-resource :- yada.schema/Resource
   "Resource for visit items (get, update, delete)"
-  [db :- Database]
+  [db]
   (yada/resource
    {:access-control {:allow-methods [:options :head :get :put :delete]
                      :allow-headers ["Content-Type" "Authorization"]
@@ -81,11 +80,11 @@
 
 (s/defn visit-routes :- bidi.schema/RoutePair
   "Define the API route for visit entities"
-  [component :- Database]
+  [{:coffee-table/keys [database]}]
   (let [routes ["/visits"
                 [;; Visit actions w/o requiring visit id
-                 ["" (new-visit-index-resource component)]
+                 ["" (new-index-resource database)]
                  ;; Visit actions requiring visit id
-                 [["/" :id] (new-visit-node-resource component)]]]]
+                 [["/" :id] (new-node-resource database)]]]]
     [""
      [routes]]))

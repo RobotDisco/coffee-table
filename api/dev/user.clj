@@ -1,26 +1,35 @@
 (ns user
-  (:require [coffee-table.component.database :as db]
+  (:require [coffee-table.database :as db]
             [coffee-table.system :refer [new-system]]
-            [reloaded.repl :refer [system init start stop go reset reset-all]]
+            [integrant.repl :refer [clear halt prep init reset reset-all]]
             [schema.core :as s]
             [buddy.hashers :as bhash]))
 
 (s/set-fn-validation! true)
 
-(reloaded.repl/set-init! #(new-system :dev))
+(defn go []
+  (let [res (integrant.repl/go)]
+    res))
+
+(integrant.repl/set-prep! #(new-system :dev))
 
 (defn migrate! []
-  (db/migrate (:db system)))
+  (-> integrant.repl.state/system
+      :coffee-table/database
+      db/migrate))
 
 (defn rollback! []
-  (db/rollback (:db system)))
+  (-> integrant.repl.state/system
+      :coffee-table/database
+      db/migrate))
 
 (defn new-user!
   ([username password]
    (new-user! username password false))
   ([username password admin?]
-   (db/add-user!
-    (:users system)
-    {:username username
-     :password (bhash/derive password)
-     :is_admin admin?})))
+   (let [{:coffee-table/keys [database]} integrant.repl.state/system]
+     (db/add-user!
+      database
+      {:username username
+       :password (bhash/derive password)
+       :is_admin admin?}))))
