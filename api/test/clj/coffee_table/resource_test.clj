@@ -2,14 +2,11 @@
   (:require [bidi.vhosts :refer [make-handler vhosts-model]]
             [coffee-table.resource :as sut]
             [clojure.test :as t :refer [deftest testing is]]
-            [environ.core :refer [env]]
             [schema.core :as s]
             [schema.test]
             [yada.yada :as yada]
             [coffee-table.test.system :as cts]
-            [coffee-table.config :as ctcfg]
-            [com.stuartsierra.component :as component]
-            [coffee-table.component.database :as dbc]
+            [coffee-table.database-mock :as dbc]
             [coffee-table.model :as m]
             [java-time]
             [ring.mock.request :as mock]
@@ -19,35 +16,27 @@
 
 (def ^:dynamic *handler*)
 
-(def config (ctcfg/config (keyword (env :clj-profile))))
-
 (defn test-system
   "Create minimal system to test Yada resource logic functionality"
   []
-  (component/system-using
-   (component/system-map
-    :db (dbc/new-database {:spec (ctcfg/database-spec config)
-                           :migratus (ctcfg/migratus config)}))
-   {}))
+  {:coffee-table/database-mock {}})
 
 (defn include-handler [f]
-  (let [db (:db cts/*system*)
+  (let [db (:coffee-table/database-mock cts/*system*)
         handler (make-handler (vhosts-model [:* (sut/visit-routes db)]))]
     (binding [*handler* handler]
       (f))))
 
 (defn add-regular-user [f]
-  (let [db (:db cts/*system*)]
+  (let [db (:coffee-table/database-mock cts/*system*)]
     (dbc/add-user! db (m/make-user "testuser" "password"))))
 
 (t/use-fixtures :once
-  schema.test/validate-schemas
-  cts/with-transaction-fixture [:db :spec]
-  add-regular-user)
+  schema.test/validate-schemas)
 
 (t/use-fixtures :each
   (cts/with-system-fixture test-system)
-  (cts/with-transaction-fixture [:db :spec])
+  add-regular-user
   include-handler)
 
 (s/defn auth-via-test-user

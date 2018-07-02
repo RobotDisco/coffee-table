@@ -1,32 +1,18 @@
 (ns coffee-table.test.system
-  (:require [coffee-table.component.database :as dbc]
-            [com.stuartsierra.component :as component]
-            [clojure.java.jdbc :as sql]))
+  (:require [integrant.core :as ig]))
 
 (def ^:dynamic *system* nil)
 
 (defmacro with-system
   [system & body]
-  `(let [s# (component/start ~system)]
+  `(let [s# (ig/init ~system)]
      (try
        (binding [*system* s#] ~@body)
        (finally
-         (component/stop s#)))))
+         (ig/halt! s#)))))
 
 (defn with-system-fixture
   [system]
   (fn [f]
     (with-system (system)
       (f))))
-
-(defn with-transaction-fixture
-  [componentvec]
-  (fn
-    [f]
-    (let [db (:db *system*)
-          spec (:spec db)]
-      (dbc/migrate db)
-      (sql/with-db-transaction [spec spec]
-        (sql/db-set-rollback-only! spec)
-        (binding [*system* (assoc-in *system* componentvec spec)]
-          (f))))))
