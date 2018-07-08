@@ -9,6 +9,9 @@
                           :user "coffeetable"
                           :password "coffeetable"
                           :ssl false}}
+  :coffee-table/selmer {:coffee-table.selmer/template-caching? #profile {:dev false
+                                                                         :test false
+                                                                         :prod true}}
  :coffee-table/migration {:store :database
                           :migration-dir "migrations"
                           :migration-table-name "migratus_migrations"
@@ -17,4 +20,5 @@
  {:coffee-table/listener #merge [#ref [:coffee-table/listener]
                                  {:coffee-table/database #ig/ref :coffee-table/database}]
   :coffee-table/database #merge [#ref [:coffee-table/database]
-                                 {:coffee-table.database/migration #ref [:coffee-table/migration]}]}}
+                                 {:coffee-table.database/migration #ref [:coffee-table/migration]}]
+  :coffee-table/selmer nil}}

@@ -1,0 +1,33 @@
+{% extends "_wrapper.html" %}
+
+{% block main %}
+
+<h1>Coffee Table</h1>
+
+<p>Rate your café visits.</p>
+
+<section>
+  <table>
+    <thead>
+      <tr>
+	<th>Id</th>
+	<th>Date visited</th>
+	<th>Café Name</th>
+	<th>Beverage Rating</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for entry in entries %}
+      <tr>
+	<td><a href="{{ entry.links.self }}">{{ entry.data.id }}</a></td>
+	<td>{{ entry.data.visit_date }}</td>
+	<td>{{ entry.data.cafe_name }}</td>
+	<td>{{ entry.data.beverage_rating }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+</section>
+
+{% endblock %}

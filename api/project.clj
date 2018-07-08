@@ -28,6 +28,9 @@
                  [bidi "2.1.3"]
                  [yada "1.2.13"]
 
+                 ;; HTML Templating
+                 [selmer "1.10.8"]
+
                  ;; Logging
                  [com.taoensso/timbre "4.10.0"]
                  [com.fzakaria/slf4j-timbre "0.3.8"]

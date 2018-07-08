@@ -4,7 +4,8 @@
             [coffee-table.model :as m]
             [coffee-table.database :as dbc :refer [verify]]
             [taoensso.timbre :as timbre]
-            [schema.core :as s])
+            [schema.core :as s]
+            [selmer.parser :as selmer])
   (:import [java.net URI]))
 
 (timbre/refer-timbre)
@@ -22,16 +23,25 @@
                                   :roles #{:user}}))
                      :authorization {:methods {:get :user
                                                :post :user}}}
-    :id :visits/index
+    :id :coffee-table.resources.visits/index
     :summary "Café Visit index"
     #_ :logger #_ #(info %)
     :description "Café Visit index"
     :consumes #{"application/json"}
-    :produces #{"application/json"}
-    :methods {:get {:response (fn [ctx]
-                                {:data (mapv (fn [x] {:links {:self (yada/path-for ctx :visits/entry {:route-params {:id (:id x)}})}
-                                                      :data x})
-                                             (dbc/list-visit-summaries db))})}
+    :produces [{:media-type #{"text/html" "application/edn;q=0.9" "application/json;q=0.8" "application/transit+json;q=0.7"}
+                :charset "UTF-8"}]
+    :methods {:get {:swagger/tags ["default" "getters"]
+                    :response (fn [ctx]
+                                (let [entries (mapv (fn [x] {:links {:self (yada/path-for ctx :coffee-table.resources.visits/index {:route-params {:id (:id x)}})}
+                                                             :data x})
+                                                    (dbc/list-visit-summaries db))]
+                                  (case (yada/content-type ctx)
+                                    "text/html" (selmer/render-file
+                                                 "coffee-table.html"
+                                                 {:title "Coffee Table"
+                                                  :ctx ctx
+                                                  :entries entries})
+                                    {:data entries})))}
               :post {:parameters {:body m/Visit}
                      :response (fn [ctx]
                                  (let [id (dbc/insert-visit! db (get-in ctx [:parameters :body]))]
