@@ -28,6 +28,97 @@
     </tbody>
   </table>
 
+    <h4>Add entry</h4>
+
+  <form method="POST">
+    <p>
+      <label>Café Name</label>
+      <input required=true type="text" name="cafe_name"/>
+    </p>
+    <p>
+      <label>Date Visited</label>
+      <input required=true type="date" name="visit_date"/>
+    </p>
+    <p>
+      <label>Coffee Machine</label>
+      <input type="text" name="machine"/>
+    </p>
+    <p>
+      <label>Coffee Grinder</label>
+      <input type="text" name="grinder"/>
+    </p>
+    <p>
+      <label>Coffee Roast</label>
+      <input type="text" name="roast" />
+    </p>
+    <p>
+      <label>Address 1</label>
+      <input type="text" name="address1">
+    </p>
+    <p>
+      <label>Address 2</label>
+      <input type="text" name="address2">
+    </p>
+    <p>
+      <label>City</label>
+      <input type="text" name="city">
+    </p>
+    <p>
+      <label>Region (State/Province/etc...)</label>
+      <input type="text" name="region">
+    </p>
+    <p>
+      <label>Country</label>
+      <input type="text" name="country">
+    </p>
+    <p>
+      <label>Beverage Ordered</label>
+      <input required=true type="text" name="beverage_ordered">
+    </p>
+    <p>
+      <label>Beverage Rating</label>
+      <input required=true type="radio" name="beverage_rating" value=1>1</input>
+      <input required=true type="radio" name="beverage_rating" value=2>2</input>
+      <input required=true type="radio" name="beverage_rating" value=3>3</input>
+      <input required=true type="radio" name="beverage_rating" value=4>4</input>
+      <input required=true type="radio" name="beverage_rating" value=5>5</input>
+    </p>
+    <p>
+      <label>Beverage Notes</label>
+      <textarea name="beverage_notes"></textarea>
+    </p>
+    <p>
+      <label>Service Rating</label>
+      <input type="radio" name="service_rating" value=1>1</input>
+      <input type="radio" name="service_rating" value=2>2</input>
+      <input type="radio" name="service_rating" value=3>3</input>
+      <input type="radio" name="service_rating" value=4>4</input>
+      <input type="radio" name="service_rating" value=5>5</input>
+    </p>
+    <p>
+      <label>Service Notes</label>
+      <textarea name="service_notes"></textarea>
+    </p>
+    <p>
+      <label>Ambience Rating</label>
+      <input type="radio" name="ambience_rating" value=1>1</input>
+      <input type="radio" name="ambience_rating" value=2>2</input>
+      <input type="radio" name="ambience_rating" value=3>3</input>
+      <input type="radio" name="ambience_rating" value=4>4</input>
+      <input type="radio" name="ambience_rating" value=5>5</input>
+    </p>
+    <p>
+      <label>Ambience Notes</label>
+      <textarea name="ambience_notes"></textarea>
+    </p>
+    <p>
+      <label>Other Notes</label>
+      <textarea name="other_notes"></textarea>
+    </p>
+      <p>
+      <input type="submit" value="Add café visit"/>
+    </p>
+  </form>
 </section>
 
 {% endblock %}

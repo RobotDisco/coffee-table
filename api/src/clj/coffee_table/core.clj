@@ -1,7 +1,7 @@
 (ns coffee-table.core
   "Entrypoint for production Uberjars"
   (:gen-class)
-  (:require [com.stuartsierra.component :as component]
+  (:require
             [coffee-table.system :refer [new-system]]
             [taoensso.timbre :as timbre]))
 
@@ -10,12 +10,12 @@
 (defn add-shutdown-hook! [^Runnable f]
   (.addShutdownHook (Runtime/getRuntime) (Thread. f)))
 
-(defn logged-shutdown [system]
+#_ (defn logged-shutdown [system]
   (info ::shutting-down-app)
   (component/stop system)
   (info ::shut-down-app))
 
-(defn -main
+#_ (defn -main
   [& args]
   (let [system (new-system :prod)]
     ;; Shut down system if we terminate
@@ -25,4 +25,3 @@
     (info ::started-app))
   ;; All threads are daemon, so block forever:
   @(promise))
-

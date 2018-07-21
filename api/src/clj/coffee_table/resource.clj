@@ -42,9 +42,13 @@
                                                   :ctx ctx
                                                   :entries entries})
                                     {:data entries})))}
-              :post {:parameters {:body m/Visit}
+              :post {:consumes #{"application/x-www-form-urlencoded"}
+                     :parameters {:form m/Visit}
                      :response (fn [ctx]
-                                 (let [id (dbc/insert-visit! db (get-in ctx [:parameters :body]))]
+                                 (let [id (dbc/insert-visit! db (merge
+                                                                 {:ambience_rating nil
+                                                                  :service_rating nil}
+                                                                 (get-in ctx [:parameters :form])))]
                                    (URI. (yada/path-for ctx :visits/entry {:route-params {:id id}}))))}}}))
 
 (s/defn new-node-resource :- yada.schema/Resource

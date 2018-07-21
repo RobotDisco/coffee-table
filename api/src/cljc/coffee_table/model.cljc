@@ -2,12 +2,13 @@
   (:require [java-time.local]
             [schema.core :as s]
             [schema.coerce :as coerce]
-            [buddy.hashers :as bhash])
+            [buddy.hashers :as bhash]
+            [clojure.walk :refer [keywordize-keys]])
   (:import [java.time LocalDate]))
 
 (s/defschema Rating
   "Numeric score for various visit factors"
-  (s/enum 0 1 2 3 4 5))
+  (s/constrained s/Int #(<= 1 % 5)))
 
 (s/defschema Visit
   "Schema for coffee table visits"
@@ -25,9 +26,9 @@
    :beverage_ordered s/Str
    :beverage_rating Rating
    :beverage_notes (s/maybe s/Str)
-   :service_rating (s/maybe Rating)
+   (s/optional-key :service_rating) (s/maybe s/Int)
    :service_notes (s/maybe s/Str)
-   :ambience_rating (s/maybe Rating)
+   (s/optional-key :ambience_rating) (s/maybe s/Int)
    :ambience_notes (s/maybe s/Str)
    :other_notes (s/maybe s/Str)})
 
