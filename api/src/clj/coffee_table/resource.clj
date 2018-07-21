@@ -32,7 +32,7 @@
                 :charset "UTF-8"}]
     :methods {:get {:swagger/tags ["default" "getters"]
                     :response (fn [ctx]
-                                (let [entries (mapv (fn [x] {:links {:self (yada/path-for ctx :coffee-table.resources.visits/index {:route-params {:id (:id x)}})}
+                                (let [entries (mapv (fn [x] {:links {:self (yada/path-for ctx :coffee-table.resources.visits/entry {:route-params {:id (:id x)}})}
                                                              :data x})
                                                     (dbc/list-visit-summaries db))]
                                   (case (yada/content-type ctx)
@@ -65,11 +65,12 @@
                      :authorization {:methods {:get :user
                                                :put :user
                                                :delete :user}}}
-    :id :visits/entry
+    :id :coffee-table.resources.visits/entry
     #_ :logger #_ #(info %)
     :description "Café Visit entries"
     :consumes #{"application/json"}
-    :produces #{"application/json"}
+    :produces [{:media-type #{"text/html" "application/edn;q=0.9" "application/json;q=0.8" "application/transit+json;q=0.7"}
+                :charset "UTF-8"}]
     :parameters {:path {:id s/Int}}
     :properties (fn [ctx]
                   (let [id (get-in ctx [:parameters :path :id])]
@@ -80,9 +81,16 @@
                                      nil))}
               :get {:response (fn [ctx]
                                 (let [id (get-in ctx [:parameters :path :id])
-                                      uri (yada/path-for ctx :visits/entry {:route-params {:id id}})]
-                                  {:links {:self uri}
-                                   :data (dbc/get-visit db id)}))}
+                                      uri (yada/path-for ctx :visits/entry {:route-params {:id id}})
+                                      data (dbc/get-visit db id)]
+                                  (case (yada/content-type ctx)
+                                    "text/html" (selmer/render-file
+                                                 "visit-entry.html"
+                                                 {:title "Visit"
+                                                  :ctx ctx
+                                                  :entry data})
+                                    {:links {:self uri}
+                                     :data (dbc/get-visit db id)})))}
               :put {:parameters {:body m/Visit}
                     :response (fn [ctx]
                                 (let [id (get-in ctx [:parameters :path :id])

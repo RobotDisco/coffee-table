@@ -1,0 +1,109 @@
+{% extends "_wrapper.html" %}
+
+{% block main %}
+
+<h1>Café Visit</h1>
+
+<section>
+  {{ entry }}
+  <h2>Update entry</h2>
+  <form id="entry">
+    <p>
+      <label>Café Name</label>
+      <input required=true type="text" name="cafe_name" value="{{ entry.cafe_name }}"/>
+    </p>
+    <p>
+      <label>Date Visited</label>
+      <input required=true type="date" name="visit_date" value="{{ entry.visit_date }}"/>
+    </p>
+    <p>
+      <label>Coffee Machine</label>
+      <input type="text" name="machine" value="{{ entry.machine }}"/>
+    </p>
+    <p>
+      <label>Coffee Grinder</label>
+      <input type="text" name="grinder" value="{{ entry.grinder }}"/>
+    </p>
+    <p>
+      <label>Coffee Roast</label>
+      <input type="text" name="roast" value="{{ entry.roast }}"/>
+    </p>
+    <p>
+      <label>Address 1</label>
+      <input type="text" name="address1" value="{{ entry.address1 }}">
+    </p>
+    <p>
+      <label>Address 2</label>
+      <input type="text" name="address2" value="{{ entry.address2 }}">
+    </p>
+    <p>
+      <label>City</label>
+      <input type="text" name="city" value="{{ entry.city }}">
+    </p>
+    <p>
+      <label>Region (State/Province/etc...)</label>
+      <input type="text" name="region" value="{{ entry.region }}">
+    </p>
+    <p>
+      <label>Country</label>
+      <input type="text" name="country" value="{{ entry.country }}">
+    </p>
+    <p>
+      <label>Beverage Ordered</label>
+      <input required=true type="text" name="beverage_ordered" value="{{ entry.beverage_ordered }}">
+    </p>
+    <p>
+      <label>Beverage Rating</label>
+      <input checked="{{ entry.beverage_rating == 1 }}" required=true type="radio" name="beverage_rating" value=1>1</input>
+      <input checked="{{ entry.beverage_rating == 2 }}" required=true type="radio" name="beverage_rating" value=2>2</input>
+      <input checked="{{ entry.beverage_rating == 3 }}" required=true type="radio" name="beverage_rating" value=3>3</input>
+      <input checked="{{ entry.beverage_rating == 4 }}" required=true type="radio" name="beverage_rating" value=4>4</input>
+      <input checked="{{ entry.beverage_rating == 5 }}" required=true type="radio" name="beverage_rating" value=5>5</input>
+    </p>
+    <p>
+      <label>Beverage Notes</label>
+      <textarea name="beverage_notes">{{ entry.beverage_notes }}</textarea>
+    </p>
+    <p>
+      <label>Service Rating</label>
+      <input checked="{{ entry.service_rating == nil }}" required=true type="radio" name="beverage_rating" value="">N/A</input>
+      <input checked="{{ entry.service_rating == 1 }}" type="radio" name="service_rating" value=1>1</input>
+      <input checked="{{ entry.service_rating == 2 }}" type="radio" name="service_rating" value=2>2</input>
+      <input checked="{{ entry.service_rating == 3 }}" type="radio" name="service_rating" value=3>3</input>
+      <input checked="{{ entry.service_rating == 4 }}" type="radio" name="service_rating" value=4>4</input>
+      <input checked="{{ entry.service_rating == 5 }}" type="radio" name="service_rating" value=5>5</input>
+    </p>
+    <p>
+      <label>Service Notes</label>
+      <textarea name="service_notes">{{ entry.service_notes }}</textarea>
+    </p>
+    <p>
+      <label>Ambience Rating</label>
+      <input checked="{{ entry.ambience_rating == nil }}" required=true type="radio" name="beverage_rating" value="">N/A</input>
+      <input type="radio" name="ambience_rating" value=1>1</input>
+      <input type="radio" name="ambience_rating" value=2>2</input>
+      <input type="radio" name="ambience_rating" value=3>3</input>
+      <input type="radio" name="ambience_rating" value=4>4</input>
+      <input type="radio" name="ambience_rating" value=5>5</input>
+    </p>
+    <p>
+      <label>Ambience Notes</label>
+      <textarea name="ambience_notes">{{ entry.ambience_notes }}</textarea>
+    </p>
+    <p>
+      <label>Other Notes</label>
+      <textarea name="other_notes">{{ entry.other_notes }}</textarea>
+    </p>
+    </form>
+
+  <button onclick="coffee_table.update()">Update</button>
+  <button onclick="coffee_table.delete()">Delete</button>
+  <p>
+    <a href="{% url phonebook-index %}">Index</a>
+  </p>
+
+  <script src="{% url static %}js/phonebook.js" type="text/javascript"/>
+</section>
+
+
+{% endblock %}
