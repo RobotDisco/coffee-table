@@ -106,7 +106,13 @@
                                       res (dbc/update-visit! db id updated-visit)]
                                   (if (> res 0)
                                     nil
-                                    (assoc-in ctx [:response :status] 404))))}}}))
+                                    (assoc-in ctx [:response :status] 404))))}}
+    :responses {404 {:produces #{"text/html"}
+                     :response (fn [ctx]
+                                 (selmer/render-file
+                                  "coffee-table-404.html"
+                                  {:title "No café visit"
+                                   :ctx ctx}))}}}))
 
 (s/defn visit-routes :- bidi.schema/RoutePair
   "Define the API route for visit entities"
