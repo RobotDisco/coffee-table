@@ -5,6 +5,7 @@
             [coffee-table.database :as dbc :refer [verify]]
             [taoensso.timbre :as timbre]
             [schema.core :as s]
+            [hiccup.core :refer [html]]
             [selmer.parser :as selmer])
   (:import [java.net URI]))
 
@@ -23,7 +24,7 @@
                                   :roles #{:user}}))
                      :authorization {:methods {:get :user
                                                :post :user}}}
-    :id :coffee-table.resources.visits/index
+    :id :coffee-table.resource/visits-index
     :summary "Café Visit index"
     #_ :logger #_ #(info %)
     :description "Café Visit index"
@@ -32,7 +33,7 @@
                 :charset "UTF-8"}]
     :methods {:get {:swagger/tags ["default" "getters"]
                     :response (fn [ctx]
-                                (let [entries (mapv (fn [x] {:links {:self (yada/path-for ctx :coffee-table.resources.visits/entry {:route-params {:id (:id x)}})}
+                                (let [entries (mapv (fn [x] {:links {:self (yada/path-for ctx :coffee-table.resource/visits-entry {:route-params {:id (:id x)}})}
                                                              :data x})
                                                     (dbc/list-visit-summaries db))]
                                   (case (yada/content-type ctx)
@@ -49,7 +50,7 @@
                                                                  {:ambience_rating nil
                                                                   :service_rating nil}
                                                                  (get-in ctx [:parameters :form])))]
-                                   (URI. (yada/path-for ctx :visits/entry {:route-params {:id id}}))))}}}))
+                                   (URI. (yada/path-for ctx :coffee-table.resource/visits-entry {:route-params {:id id}}))))}}}))
 
 (s/defn new-node-resource :- yada.schema/Resource
   "Resource for visit items (get, update, delete)"
@@ -65,7 +66,7 @@
                      :authorization {:methods {:get :user
                                                :put :user
                                                :delete :user}}}
-    :id :coffee-table.resources.visits/entry
+    :id :coffee-table.resource/visits-entry
     #_ :logger #_ #(info %)
     :description "Café Visit entries"
     :consumes #{"application/json"}
@@ -76,12 +77,17 @@
                   (let [id (get-in ctx [:parameters :path :id])]
                     {:exists? (not (nil? (dbc/get-visit db id)))}))
     :methods {:delete {:response (fn [ctx]
-                                   (let [id (get-in ctx [:parameters :path :id])
-                                         _ (dbc/delete-visit-by-id! db id)]
-                                     nil))}
+                                   (let [id (get-in ctx [:parameters :path :id])]
+                                     (dbc/delete-visit-by-id! db id)
+                                     (let [msg (format "Visit %s has been removed" id)]
+                                       (case (get-in ctx [:response :produces :media-type :name])
+                                         "text/plain" msg
+                                         "text/html" (html [:h2 msg])
+                                         {:links {:index (URI. (yada/path-for ctx :coffee-table.resource/visits-index))}
+                                          :data {:message msg}}))))}
               :get {:response (fn [ctx]
                                 (let [id (get-in ctx [:parameters :path :id])
-                                      uri (yada/path-for ctx :visits/entry {:route-params {:id id}})
+                                      uri (yada/path-for ctx :coffee-table.resources/visits-entry {:route-params {:id id}})
                                       data (dbc/get-visit db id)]
                                   (case (yada/content-type ctx)
                                     "text/html" (selmer/render-file

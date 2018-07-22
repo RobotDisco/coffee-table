@@ -12,7 +12,7 @@
   (fn [args context-map]
     (when-let [ctx (:ctx context-map)]
       (get (yada/uri-info ctx
-                          (keyword "coffee-table.resources" (first args))
+                          (keyword "coffee-table.resource" (first args))
                           {:route-params
                            (reduce (fn [acc [k v]]
                                      (assoc acc

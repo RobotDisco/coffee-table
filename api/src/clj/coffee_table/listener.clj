@@ -26,7 +26,7 @@
                                                        :ctx ctx}))}}})]
 
     #_ ["" (assoc (yada/redirect :edge.resources/index) :id :edge.resources/content)]
-    ["public/" (assoc (new-classpath-resource "public") :id :coffee-table.resources/static)]]])
+    ["public/" (assoc (new-classpath-resource "public") :id :coffee-table.resource/static)]]])
 
 (s/defn routes
   "Create the URI route structure for our application."
