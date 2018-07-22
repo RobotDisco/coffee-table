@@ -5,11 +5,28 @@
             [coffee-table.resource :refer [visit-routes]]
             [yada.yada :as yada]
             [yada.swagger :refer [swaggered]]
+            [yada.resources.classpath-resource :refer [new-classpath-resource]]
             [yada.resources.webjar-resource :refer [new-webjar-resource]]
             [taoensso.timbre :as timbre]
             [integrant.core :as ig]))
 
 (timbre/refer-timbre)
+
+(defn content-routes []
+  ["/"
+   [
+    #_ ["index.html"
+     (yada/resource
+      {:id :edge.resources/index
+       :methods
+       {:get
+        {:produces #{"text/html"}
+         :response (fn [ctx]
+                     (selmer/render-file "index.html" {:title "Edge Index"
+                                                       :ctx ctx}))}}})]
+
+    #_ ["" (assoc (yada/redirect :edge.resources/index) :id :edge.resources/content)]
+    ["public/" (assoc (new-classpath-resource "public") :id :coffee-table.resources/static)]]])
 
 (s/defn routes
   "Create the URI route structure for our application."
@@ -27,6 +44,7 @@
     ["/swagger" (tag
                  (new-webjar-resource "/swagger-ui" {:index-files ["index.html"]})
                  :coffee-table.resources/swagger)]
+    (content-routes)
     [true (yada/handler nil)]]])
 
 (defmethod ig/init-key :coffee-table/listener

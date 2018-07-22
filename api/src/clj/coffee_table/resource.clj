@@ -94,7 +94,9 @@
               :put {:parameters {:body m/Visit}
                     :response (fn [ctx]
                                 (let [id (get-in ctx [:parameters :path :id])
-                                      updated-visit (get-in ctx [:parameters :body])
+                                      updated-visit (merge {:service_rating nil
+                                                            :ambience_rating nil}
+                                                           (get-in ctx [:parameters :body]))
                                       res (dbc/update-visit! db id updated-visit)]
                                   (if (> res 0)
                                     nil

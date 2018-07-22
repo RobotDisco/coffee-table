@@ -5,9 +5,8 @@
 <h1>Café Visit</h1>
 
 <section>
-  {{ entry }}
-  <h2>Update entry</h2>
-  <form id="entry">
+  <h2>Update visit</h2>
+  <form id="visit">
     <p>
       <label>Café Name</label>
       <input required=true type="text" name="cafe_name" value="{{ entry.cafe_name }}"/>
@@ -54,11 +53,11 @@
     </p>
     <p>
       <label>Beverage Rating</label>
-      <input checked="{{ entry.beverage_rating == 1 }}" required=true type="radio" name="beverage_rating" value=1>1</input>
-      <input checked="{{ entry.beverage_rating == 2 }}" required=true type="radio" name="beverage_rating" value=2>2</input>
-      <input checked="{{ entry.beverage_rating == 3 }}" required=true type="radio" name="beverage_rating" value=3>3</input>
-      <input checked="{{ entry.beverage_rating == 4 }}" required=true type="radio" name="beverage_rating" value=4>4</input>
-      <input checked="{{ entry.beverage_rating == 5 }}" required=true type="radio" name="beverage_rating" value=5>5</input>
+      <input {% ifequal entry.beverage_rating 1 %}checked{% endifequal %} required=true type="radio" name="beverage_rating" value=1>1</input>
+      <input {% ifequal entry.beverage_rating 2 %}checked{% endifequal %} required=true type="radio" name="beverage_rating" value=2>2</input>
+      <input {% ifequal entry.beverage_rating 3 %}checked{% endifequal %} required=true type="radio" name="beverage_rating" value=3>3</input>
+      <input {% ifequal entry.beverage_rating 4 %}checked{% endifequal %} required=true type="radio" name="beverage_rating" value=4>4</input>
+      <input {% ifequal entry.beverage_rating 5 %}checked{% endifequal %} required=true type="radio" name="beverage_rating" value=5>5</input>
     </p>
     <p>
       <label>Beverage Notes</label>
@@ -66,12 +65,11 @@
     </p>
     <p>
       <label>Service Rating</label>
-      <input checked="{{ entry.service_rating == nil }}" required=true type="radio" name="beverage_rating" value="">N/A</input>
-      <input checked="{{ entry.service_rating == 1 }}" type="radio" name="service_rating" value=1>1</input>
-      <input checked="{{ entry.service_rating == 2 }}" type="radio" name="service_rating" value=2>2</input>
-      <input checked="{{ entry.service_rating == 3 }}" type="radio" name="service_rating" value=3>3</input>
-      <input checked="{{ entry.service_rating == 4 }}" type="radio" name="service_rating" value=4>4</input>
-      <input checked="{{ entry.service_rating == 5 }}" type="radio" name="service_rating" value=5>5</input>
+      <input {% ifequal entry.service_rating 1 %}checked{% endifequal %} type="radio" name="service_rating" value=1>1</input>
+      <input {% ifequal entry.service_rating 2 %}checked{% endifequal %} type="radio" name="service_rating" value=2>2</input>
+      <input {% ifequal entry.service_rating 3 %}checked{% endifequal %} type="radio" name="service_rating" value=3>3</input>
+      <input {% ifequal entry.service_rating 4 %}checked{% endifequal %} type="radio" name="service_rating" value=4>4</input>
+      <input {% ifequal entry.service_rating 5 %}checked{% endifequal %} type="radio" name="service_rating" value=5>5</input>
     </p>
     <p>
       <label>Service Notes</label>
@@ -79,12 +77,11 @@
     </p>
     <p>
       <label>Ambience Rating</label>
-      <input checked="{{ entry.ambience_rating == nil }}" required=true type="radio" name="beverage_rating" value="">N/A</input>
-      <input type="radio" name="ambience_rating" value=1>1</input>
-      <input type="radio" name="ambience_rating" value=2>2</input>
-      <input type="radio" name="ambience_rating" value=3>3</input>
-      <input type="radio" name="ambience_rating" value=4>4</input>
-      <input type="radio" name="ambience_rating" value=5>5</input>
+      <input {% ifequal entry.ambience_rating 1 %}checked{% endifequal %} type="radio" name="ambience_rating" value=1>1</input>
+      <input {% ifequal entry.ambience_rating 2 %}checked{% endifequal %} type="radio" name="ambience_rating" value=2>2</input>
+      <input {% ifequal entry.ambience_rating 3 %}checked{% endifequal %} type="radio" name="ambience_rating" value=3>3</input>
+      <input {% ifequal entry.ambience_rating 4 %}checked{% endifequal %} type="radio" name="ambience_rating" value=4>4</input>
+      <input {% ifequal entry.ambience_rating 5 %}checked{% endifequal %} type="radio" name="ambience_rating" value=5>5</input>
     </p>
     <p>
       <label>Ambience Notes</label>
@@ -94,15 +91,15 @@
       <label>Other Notes</label>
       <textarea name="other_notes">{{ entry.other_notes }}</textarea>
     </p>
-    </form>
+  </form>
+  <p>
+    <a href="{% url coffee-table-index %}">Index</a>
+  </p>
 
   <button onclick="coffee_table.update()">Update</button>
   <button onclick="coffee_table.delete()">Delete</button>
-  <p>
-    <a href="{% url phonebook-index %}">Index</a>
-  </p>
 
-  <script src="{% url static %}js/phonebook.js" type="text/javascript"/>
+  <script src="{% url static %}js/coffee-table.js" type="text/javascript"/>
 </section>
 
 
