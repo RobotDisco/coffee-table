@@ -3,11 +3,14 @@
  :coffee-table/database {:coffee-table.database/spec
                          {:dbtype "postgresql"
                           :host #profile {:default "postgres"
-                                          :dev "localhost"}
+                                          :dev "localhost"
+                                          :prod #env "DATABASE_HOST"}
                           :port 5432
                           :dbname "coffeetable"
-                          :user "coffeetable"
-                          :password "coffeetable"
+                          :user #profile {:default "coffeetable"
+                                          :prod #env "DATABASE_USER"}
+                          :password #profile {:default "coffeetable"
+                                              :prod #env "DATABASE_PASS"}
                           :ssl false}}
  :coffee-table/selmer {:coffee-table.selmer/template-caching? #profile {:dev false
                                                                         :test false
