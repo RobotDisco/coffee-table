@@ -9,9 +9,9 @@
                           :user "coffeetable"
                           :password "coffeetable"
                           :ssl false}}
-  :coffee-table/selmer {:coffee-table.selmer/template-caching? #profile {:dev false
-                                                                         :test false
-                                                                         :prod true}}
+ :coffee-table/selmer {:coffee-table.selmer/template-caching? #profile {:dev false
+                                                                        :test false
+                                                                        :prod true}}
  :coffee-table/migration {:store :database
                           :migration-dir "migrations"
                           :migration-table-name "migratus_migrations"
