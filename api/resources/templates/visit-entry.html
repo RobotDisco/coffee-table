@@ -5,101 +5,161 @@
 <h1 class="ui header">Café Visit</h1>
 
 <section>
-  <h2>Update visit</h2>
-  <form id="visit">
-    <p>
+  <h2 class="ui header">Update visit</h2>
+  <form class="ui form" id="visit">
+    <div class="required field">
       <label>Café Name</label>
       <input required=true type="text" name="cafe_name" value="{{ entry.cafe_name }}"/>
-    </p>
-    <p>
+    </div>
+    <div class="required field">
       <label>Date Visited</label>
       <input required=true type="date" name="visit_date" value="{{ entry.visit_date }}"/>
-    </p>
-    <p>
+    </div>
+    <div class="field">
       <label>Coffee Machine</label>
       <input type="text" name="machine" value="{{ entry.machine }}"/>
-    </p>
-    <p>
+    </div>
+    <div class="field">
       <label>Coffee Grinder</label>
       <input type="text" name="grinder" value="{{ entry.grinder }}"/>
-    </p>
-    <p>
+    </div>
+    <div class="field">
       <label>Coffee Roast</label>
       <input type="text" name="roast" value="{{ entry.roast }}"/>
-    </p>
-    <p>
+    </div>
+    <div class="field">
       <label>Address 1</label>
       <input type="text" name="address1" value="{{ entry.address1 }}">
-    </p>
-    <p>
+    </div>
+    <div class="field">
       <label>Address 2</label>
       <input type="text" name="address2" value="{{ entry.address2 }}">
-    </p>
-    <p>
+    </div>
+    <div class="field">
       <label>City</label>
       <input type="text" name="city" value="{{ entry.city }}">
-    </p>
-    <p>
+    </div>
+    <div class="field">
       <label>Region (State/Province/etc...)</label>
       <input type="text" name="region" value="{{ entry.region }}">
-    </p>
-    <p>
+    </div>
+    <div class="field">
       <label>Country</label>
       <input type="text" name="country" value="{{ entry.country }}">
-    </p>
-    <p>
+    </div>
+    <div class="field">
       <label>Beverage Ordered</label>
       <input required=true type="text" name="beverage_ordered" value="{{ entry.beverage_ordered }}">
-    </p>
-    <p>
+    </div>
+    <div class="required inline fields">
       <label>Beverage Rating</label>
-      <input {% ifequal entry.beverage_rating 1 %}checked{% endifequal %} required=true type="radio" name="beverage_rating" value=1>1</input>
-      <input {% ifequal entry.beverage_rating 2 %}checked{% endifequal %} required=true type="radio" name="beverage_rating" value=2>2</input>
-      <input {% ifequal entry.beverage_rating 3 %}checked{% endifequal %} required=true type="radio" name="beverage_rating" value=3>3</input>
-      <input {% ifequal entry.beverage_rating 4 %}checked{% endifequal %} required=true type="radio" name="beverage_rating" value=4>4</input>
-      <input {% ifequal entry.beverage_rating 5 %}checked{% endifequal %} required=true type="radio" name="beverage_rating" value=5>5</input>
-    </p>
-    <p>
+      <div class="field">
+	<div class="ui radio checkbox">
+	  <label>1</label>
+	  <input {% ifequal entry.beverage_rating 1 %}checked{% endifequal %} required="true" class="hidden" type="radio" name="beverage_rating" value=1 />
+	</div>
+      </div>
+      <div class="field">
+	<div class="ui radio checkbox">
+	  <label>2</label>
+	  <input {% ifequal entry.beverage_rating 2 %}checked{% endifequal %} required="true" class="hidden" type="radio" name="beverage_rating" value=2 />
+	</div>
+      </div>
+      <div class="field">
+	<div class="ui radio checkbox">
+	  <label>3</label>
+	  <input {% ifequal entry.beverage_rating 3 %}checked{% endifequal %} required="true" class="hidden" type="radio" name="beverage_rating" value=3 />
+	</div>
+      </div>
+      <div class="field">
+	<div class="ui radio checkbox">
+	  <label>4</label>
+	  <input {% ifequal entry.beverage_rating 4 %}checked{% endifequal %} required="true" class="hidden" type="radio" name="beverage_rating" value=4 />
+	</div>
+      </div>
+      <div class="field">
+	<div class="ui radio checkbox">
+	  <label>5</label>
+	  <input {% ifequal entry.beverage_rating 5 %}checked{% endifequal %} required="true" class="hidden" type="radio" name="beverage_rating" value=5 />
+	</div>
+      </div>
+    </div>
+    <div class="field">
       <label>Beverage Notes</label>
       <textarea name="beverage_notes">{{ entry.beverage_notes }}</textarea>
-    </p>
-    <p>
+    </div>
+    <div class="inline fields">
       <label>Service Rating</label>
-      <input {% ifequal entry.service_rating 1 %}checked{% endifequal %} type="radio" name="service_rating" value=1>1</input>
-      <input {% ifequal entry.service_rating 2 %}checked{% endifequal %} type="radio" name="service_rating" value=2>2</input>
-      <input {% ifequal entry.service_rating 3 %}checked{% endifequal %} type="radio" name="service_rating" value=3>3</input>
-      <input {% ifequal entry.service_rating 4 %}checked{% endifequal %} type="radio" name="service_rating" value=4>4</input>
-      <input {% ifequal entry.service_rating 5 %}checked{% endifequal %} type="radio" name="service_rating" value=5>5</input>
-    </p>
-    <p>
+      <div class="ui radio checkbox">
+	<label>1</label>
+	<input {% ifequal entry.service_rating 1 %}checked{% endifequal %} class="hidden" type="radio" name="service_rating" value=1 />
+      </div>
+      <div class="ui radio checkbox">
+	<label>2</label>
+	<input {% ifequal entry.service_rating 2 %}checked{% endifequal %} class="hidden" type="radio" name="service_rating" value=2 />
+      </div>
+      <div class="ui radio checkbox">
+	<label>3</label>
+	<input {% ifequal entry.service_rating 3 %}checked{% endifequal %} class="hidden" type="radio" name="service_rating" value=3 />
+      </div>
+      <div class="ui radio checkbox">
+	<label>4</label>
+	<input {% ifequal entry.service_rating 4 %}checked{% endifequal %} class="hidden" type="radio" name="service_rating" value=4 />
+      </div>
+      <div class="ui radio checkbox">
+	<label>5</label>
+	<input {% ifequal entry.service_rating 5 %}checked{% endifequal %} class="hidden" type="radio" name="service_rating" value=5 />
+      </div>
+    </div>
+    <div class="field">
       <label>Service Notes</label>
       <textarea name="service_notes">{{ entry.service_notes }}</textarea>
-    </p>
-    <p>
+    </div>
+    <div class="inline fields">
       <label>Ambience Rating</label>
-      <input {% ifequal entry.ambience_rating 1 %}checked{% endifequal %} type="radio" name="ambience_rating" value=1>1</input>
-      <input {% ifequal entry.ambience_rating 2 %}checked{% endifequal %} type="radio" name="ambience_rating" value=2>2</input>
-      <input {% ifequal entry.ambience_rating 3 %}checked{% endifequal %} type="radio" name="ambience_rating" value=3>3</input>
-      <input {% ifequal entry.ambience_rating 4 %}checked{% endifequal %} type="radio" name="ambience_rating" value=4>4</input>
-      <input {% ifequal entry.ambience_rating 5 %}checked{% endifequal %} type="radio" name="ambience_rating" value=5>5</input>
-    </p>
-    <p>
+      <div class="ui radio checkbox">
+	<label>1</label>
+	<input {% ifequal entry.ambience_rating 1 %}checked{% endifequal %} class="hidden" type="radio" name="ambience_rating" value=1 />
+      </div>
+      <div class="ui radio checkbox">
+	<label>2</label>
+	<input {% ifequal entry.ambience_rating 2 %}checked{% endifequal %} class="hidden" type="radio" name="ambience_rating" value=2 />
+      </div>
+      <div class="ui radio checkbox">
+	<label>3</label>
+	<input {% ifequal entry.ambience_rating 3 %}checked{% endifequal %} class="hidden" type="radio" name="ambience_rating" value=3 />
+      </div>
+      <div class="ui radio checkbox">
+	<label>4</label>
+	<input {% ifequal entry.ambience_rating 4 %}checked{% endifequal %} class="hidden" type="radio" name="ambience_rating" value=4 />
+      </div>
+      <div class="ui radio checkbox">
+	<label>5</label>
+	<input {% ifequal entry.ambience_rating 5 %}checked{% endifequal %} class="hidden" type="radio" name="ambience_rating" value=5 />
+      </div>
+    </div>
+    <div class="field">
       <label>Ambience Notes</label>
       <textarea name="ambience_notes">{{ entry.ambience_notes }}</textarea>
-    </p>
-    <p>
+    </div>
+    <div class="field">
       <label>Other Notes</label>
       <textarea name="other_notes">{{ entry.other_notes }}</textarea>
-    </p>
+    </div>
+
+    <button class="ui button" role="button" onclick="coffee_table.update()">Update</button>
+    <button class="ui button" role="button" onclick="coffee_table.delete()">Delete</button>
   </form>
   <p>
     <a href="{% url visits-index %}">Index</a>
   </p>
 
-  <button onclick="coffee_table.update()">Update</button>
-  <button onclick="coffee_table.delete()">Delete</button>
-
   <script src="{% url static %}js/coffee-table.js" type="text/javascript"></script>
+  <script type="text/javascript">
+   $(document).ready(function() {
+       $( ".ui.checkbox" ).checkbox();
+   });
+  </script>
 </section>
 
 
