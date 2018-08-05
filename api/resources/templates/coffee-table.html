@@ -2,12 +2,13 @@
 
 {% block main %}
 
-<h1>Coffee Table</h1>
-
-<p>Rate your café visits.</p>
+<h1 class="ui header">
+  Coffee Table
+  <div class="sub header">Rate your café visits.</div>
+</h1>
 
 <section>
-  <table>
+  <table class="ui celled table">
     <thead>
       <tr>
 	<th>Id</th>
@@ -22,7 +23,7 @@
 	<td><a href="{{ entry.links.self }}">{{ entry.data.id }}</a></td>
 	<td>{{ entry.data.visit_date }}</td>
 	<td>{{ entry.data.cafe_name }}</td>
-	<td>{{ entry.data.beverage_rating }}</td>
+	<td><div class="ui star rating" data-rating="{{ entry.data.beverage_rating }}" data-max-rating="5"></div></td>
       </tr>
       {% endfor %}
     </tbody>
@@ -120,5 +121,13 @@
     </p>
   </form>
 </section>
+
+<script type="text/javascript">
+ $(document).ready(function() {
+     $(".ui.rating").rating({
+	 "interactive": false
+     });
+ });
+</script>
 
 {% endblock %}

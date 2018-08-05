@@ -6,10 +6,12 @@
     <meta name="description" content="{{ description|default:\"Coffee Table - Rate your cafe visits\" }}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ title }}</title>
-    <!-- <link rel="stylesheet" href="{% url static %}app.css"/> -->
+    <link rel="stylesheet" href="{% url static %}css/semantic.min.css"/>
+    <script type="text/javascript" src="{% url static %}js/jquery.min.js"></script>
+    <script type="text/javascript" src="{% url static %}js/semantic.min.js"></script>
   </head>
 
-  <body>
+  <body class="ui container">
     {% block body %}
     <main>
     {% block main %}
