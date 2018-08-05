@@ -31,94 +31,167 @@
 
     <h4>Add entry</h4>
 
-  <form method="POST">
-    <p>
+  <form class="ui form" method="POST">
+    <div class="required field">
       <label>Café Name</label>
-      <input required=true type="text" name="cafe_name"/>
-    </p>
-    <p>
+      <input required="true" type="text" name="cafe_name"/>
+    </div>
+    <div class="required field">
       <label>Date Visited</label>
       <input required=true type="date" name="visit_date"/>
-    </p>
-    <p>
+    </div>
+    <div class="field">
       <label>Coffee Machine</label>
       <input type="text" name="machine"/>
-    </p>
-    <p>
+    </div>
+    <div class="field">
       <label>Coffee Grinder</label>
       <input type="text" name="grinder"/>
-    </p>
-    <p>
+    </div>
+    <div class="field">
       <label>Coffee Roast</label>
       <input type="text" name="roast" />
-    </p>
-    <p>
+    </div>
+    <div class="field">
       <label>Address 1</label>
       <input type="text" name="address1">
-    </p>
-    <p>
+    </div>
+    <div class="field">
       <label>Address 2</label>
       <input type="text" name="address2">
-    </p>
-    <p>
+    </div>
+    <div class="field">
       <label>City</label>
       <input type="text" name="city">
-    </p>
-    <p>
+    </div>
+    <div class="field">
       <label>Region (State/Province/etc...)</label>
       <input type="text" name="region">
-    </p>
-    <p>
+    </div>
+    <div class="field">
       <label>Country</label>
       <input type="text" name="country">
-    </p>
-    <p>
+    </div>
+    <div class="required field">
       <label>Beverage Ordered</label>
       <input required=true type="text" name="beverage_ordered">
-    </p>
-    <p>
+    </div>
+    <div class="required inline fields">
       <label>Beverage Rating</label>
-      <input required=true type="radio" name="beverage_rating" value=1>1</input>
-      <input required=true type="radio" name="beverage_rating" value=2>2</input>
-      <input required=true type="radio" name="beverage_rating" value=3>3</input>
-      <input required=true type="radio" name="beverage_rating" value=4>4</input>
-      <input required=true type="radio" name="beverage_rating" value=5>5</input>
-    </p>
-    <p>
+      <div class="field">
+	<div class="ui radio checkbox">
+	  <label>1</label>
+	  <input required="true" hidden=true type="radio" name="beverage_rating" value=1/>
+	</div>
+      </div>
+      <div class="field">
+	<div class="ui radio checkbox">
+	  <label>2</label>
+	  <input required="true" hidden=true type="radio" name="beverage_rating" value=2/>
+	</div>
+      </div>
+      <div class="field">
+	<div class="ui radio checkbox">
+	  <label>3</label>
+	  <input required="true" hidden=true type="radio" name="beverage_rating" value=3/>
+	</div>
+      </div>
+      <div class="field">
+	<div class="ui radio checkbox">
+	  <label>4</label>
+	  <input required="true" hidden=true type="radio" name="beverage_rating" value=4/>
+	</div>
+      </div>
+      <div class="field">
+	<div class="ui radio checkbox">
+	  <label>5</label>
+	  <input required="true" hidden=true type="radio" name="beverage_rating" value=5/>
+	</div>
+      </div>
+    </div>
+    <div class="field">
       <label>Beverage Notes</label>
       <textarea name="beverage_notes"></textarea>
-    </p>
-    <p>
+    </div>
+    <div class="inline fields">
       <label>Service Rating</label>
-      <input type="radio" name="service_rating" value=1>1</input>
-      <input type="radio" name="service_rating" value=2>2</input>
-      <input type="radio" name="service_rating" value=3>3</input>
-      <input type="radio" name="service_rating" value=4>4</input>
-      <input type="radio" name="service_rating" value=5>5</input>
-    </p>
-    <p>
+      <div class="field">
+	<div class="ui radio checkbox">
+	  <label>1</label>
+	  <input hidden=true type="radio" name="service_rating" value=1/>
+	</div>
+      </div>
+      <div class="field">
+	<div class="ui radio checkbox">
+	  <label>2</label>
+	  <input hidden=true type="radio" name="service_rating" value=2/>
+	</div>
+      </div>
+      <div class="field">
+	<div class="ui radio checkbox">
+	  <label>3</label>
+	  <input hidden=true type="radio" name="service_rating" value=3/>
+	</div>
+      </div>
+      <div class="field">
+	<div class="ui radio checkbox">
+	  <label>4</label>
+	  <input hidden=true type="radio" name="service_rating" value=4/>
+	</div>
+      </div>
+      <div class="field">
+	<div class="ui radio checkbox">
+	  <label>5</label>
+	  <input hidden=true type="radio" name="service_rating" value=5/>
+	</div>
+      </div>
+    </div>
+    <div class="field">
       <label>Service Notes</label>
       <textarea name="service_notes"></textarea>
-    </p>
-    <p>
+    </div>
+    <div class="inline fields">
       <label>Ambience Rating</label>
-      <input type="radio" name="ambience_rating" value=1>1</input>
-      <input type="radio" name="ambience_rating" value=2>2</input>
-      <input type="radio" name="ambience_rating" value=3>3</input>
-      <input type="radio" name="ambience_rating" value=4>4</input>
-      <input type="radio" name="ambience_rating" value=5>5</input>
-    </p>
-    <p>
+      <div class="field">
+	<div class="ui radio checkbox">
+	  <label>1</label>
+	  <input hidden=true type="radio" name="ambience_rating" value=1/>
+	</div>
+      </div>
+      <div class="field">
+	<div class="ui radio checkbox">
+	  <label>2</label>
+	  <input hidden=true type="radio" name="ambience_rating" value=2/>
+	</div>
+      </div>
+      <div class="field">
+	<div class="ui radio checkbox">
+	  <label>3</label>
+	  <input hidden=true type="radio" name="ambience_rating" value=3/>
+	</div>
+      </div>
+      <div class="field">
+	<div class="ui radio checkbox">
+	  <label>4</label>
+	  <input hidden=true type="radio" name="ambience_rating" value=4/>
+	</div>
+      </div>
+      <div class="field">
+	<div class="ui radio checkbox">
+	  <label>5</label>
+	  <input hidden=true type="radio" name="ambience_rating" value=5/>
+	</div>
+      </div>
+    </div>
+    <div class="field">
       <label>Ambience Notes</label>
       <textarea name="ambience_notes"></textarea>
-    </p>
-    <p>
+    </div>
+    <div>
       <label>Other Notes</label>
       <textarea name="other_notes"></textarea>
-    </p>
-      <p>
-      <input type="submit" value="Add café visit"/>
-    </p>
+    </div>
+    <button class="ui button" role="button" type="submit">Add café visit"</button>
   </form>
 </section>
 
