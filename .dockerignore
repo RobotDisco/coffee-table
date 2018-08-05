@@ -12,3 +12,4 @@ LICENSE
 .lein-failures
 .nrepl-port
 README.org
+.env
