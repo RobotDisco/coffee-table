@@ -48,8 +48,8 @@
     [true (yada/handler nil)]]])
 
 (defmethod ig/init-key :coffee-table/listener
-  [_ {:coffee-table.listener/keys [host port] :as config}]
-  (let [vhosts-model (vhosts-model [{:scheme :http :host host} (routes config)])
+  [_ {:coffee-table.listener/keys [host port scheme] :as config}]
+  (let [vhosts-model (vhosts-model [{:scheme scheme :host host} (routes config)])
         listener (yada/listener vhosts-model {:port port})]
     (info "Started http server on port %s" (:port listener))
     {:listener listener

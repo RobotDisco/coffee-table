@@ -1,6 +1,8 @@
-{:coffee-table/listener #profile {:dev {:coffee-table.listener/host "localhost:3000"
+{:coffee-table/listener #profile {:dev {:coffee-table.listener/scheme :http
+                                        :coffee-table.listener/host "localhost:3000"
                                         :coffee-table.listener/port 3000}
-                                  :prod {:coffee-table.listener/host "coffee.robot-disco.net"
+                                  :prod {:coffee-table.listener/scheme :https
+                                         :coffee-table.listener/host "coffee.robot-disco.net"
                                          :coffee-table.listener/port 1240}}
  :coffee-table/database {:coffee-table.database/spec
                          {:dbtype "postgresql"
