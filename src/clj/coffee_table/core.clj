@@ -12,7 +12,7 @@
 
 (defn logged-shutdown [system]
   (info ::shutting-down-app)
-  (ig/halt system)
+  (ig/halt! system)
   (info ::shut-down-app))
 
 (defn -main
